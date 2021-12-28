@@ -6,8 +6,8 @@ sys.path.append(CURRENT_WORKDIR)
 import math
 from math import sqrt
 import importlib
-
-
+from ROOT import TFile
+import analyzer 
 
 def trigger_calc(filename,outdir):
     '''
@@ -21,15 +21,12 @@ def trigger_calc(filename,outdir):
     except ValueError as exc:
          raise RuntimeError('No such File :{}'.format(filename)) 
     
-    filein = TFile.Open(filename)
-    treein = filein.Get('Events')    
-    entries = treein.GetEntries()
-    #print(entries)
     file_basename = os.path.basename(filename).split(".root")[0] #Take out filename from its path
-    outfiles = [os.path.join(outdir,file_basename+subname+'.root') for subname in ['_ee','_em','_mm']]
-
-
-class build_hist:
-    pass
-
+    
+    outfilenames = [os.path.join(outdir,file_basename+subname+'.root') for subname in ['_ee','_em','_mm']]
+    
+    ee_analyzer = analyzer.ee_analyzer(infilename=filename,outfilename=outfilenames[0])
+    ee_analyzer.selection()
+    ee_analyzer.deviate()
+    
 
