@@ -7,7 +7,7 @@ import math
 from math import sqrt
 import importlib
 from ROOT import TFile
-import analyzer 
+import utils.analyzer as analyzer 
 
 def trigger_calc(filename,outdir):
     '''
@@ -27,6 +27,6 @@ def trigger_calc(filename,outdir):
     
     ee_analyzer = analyzer.ee_analyzer(infilename=filename,outfilename=outfilenames[0])
     ee_analyzer.selection()
-    ee_analyzer.deviate()
+    #ee_analyzer.deactivate()
     
 
