@@ -23,7 +23,6 @@ class analyzer():
         bh.build_2Dhistogram_for_lep(command=cmd_str.h2_lepcommand)
         bh.build_2Dhistogram_for_2lep(command=cmd_str.h2_2lepcommand)
         bh.build_tag_histogram()
-
     def selection(self):
         pass
     def write(self):
@@ -47,6 +46,11 @@ class ee_analyzer(analyzer):
             else:
                 met =  self.tree.MET_T1_pt
             if ientry%100 ==0: print('processing {0}'.format(ientry))
-            if not (self.tree.Flag_goodVertices and self.tree.Flag_globalSuperTightHalo2016Filter and self.tree.Flag_HBHENoiseFilter and self.tree.Flag_HBHENoiseIsoFilter and self.tree.Flag_EcalDeadCellTriggerPrimitiveFilter and self.tree.Flag_BadPFMuonFilter and self.tree.Flag_eeBadScFilter and self.tree.Flag_ecalBadCalibFilter):
-                continue
         
+            if ientry ==1:
+                print(cmd_str.fill_histocommand.format(3,'DY_l1_pt','DY_l1_eta','DY_l1_phi','DY_l1_mass','DY_l2_pt','DY_l2_eta','DY_l2_phi','DY_l2_mass','self.tree.Electron_RECO_SF[self.tree.DY_l1_id]*self.tree.Electron_RECO_SF[self.tree.DY_l2_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.DY_l1_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.DY_l2_id]','ttc_l1_pt','ttc_l1_eta','ttc_l1_phi','ttc_l1_mass','ttc_l2_pt','ttc_l2_eta','ttc_l2_phi','ttc_l2_mass','self.tree.Electron_RECO_SF[self.tree.ttc_l1_id]*self.tree.Electron_RECO_SF[self.tree.ttc_l2_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.ttc_l1_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.ttc_l2_id]','self.tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL or self.tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or self.tree.HLT_passEle32WPTight or self.tree.HLT_Ele35_WPTight_Gsf','self.tree.HLT_PFMET120_PFMHT120_IDTight or self.tree.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight or self.tree.HLT_PFHT500_PFMET100_PFMHT100_IDTight or self.tree.HLT_PFHT700_PFMET85_PFMHT85_IDTight or self.tree.HLT_PFHT800_PFMET75_PFMHT75_IDTight'))
+
+
+
+
+
