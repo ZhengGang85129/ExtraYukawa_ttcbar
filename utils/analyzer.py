@@ -30,15 +30,9 @@ class analyzer():
         
         self.l1p4 = TLorentzVector()
         self.l2p4 = TLorentzVector()
-        self.build_1Dhistogram_for_lep()
-        self.build_1Dhistogram_for_njet()
-        self.build_1Dhistogram_for_met()
-        self.build_1Dhistogram_for_pu()
-        self.build_2Dhistogram_for_lep()
-        self.build_2Dhistogram_for_2lep()
         #self.build_tag_histogram(True)
     def build_1Dhistogram_for_lep(self,deactivate=False,command=cmd_str.h1_lepcommand):
-        states = ['pre','']
+        states = ['pre_','']
         lep_orders = ['l1','l2']
         observables =['eta','pt']
         conditions =['','_low','_high']
@@ -48,6 +42,7 @@ class analyzer():
                 continue
             if condition =='' and obj != '':
                 continue
+        
             if not deactivate:
                 x_title = ''
                 if order == 'l1':
@@ -137,6 +132,7 @@ class analyzer():
         for state,observable,condition,obj in product(states,observables,conditions,objects):
             if condition == '' and obj != '' : continue
             elif condition != '' and obj == '': continue
+            
             if not deactivate:
                 if observable == 'pt':
                     xtitle = _xtitle+'P_{T} [GeV]'
@@ -158,7 +154,6 @@ class analyzer():
                 c =command.format(state,observable,condition,obj)
             exec(c)
         
-        #bh.build_tag_histogram()
     def selection(self):
         pass
     def write(self):
@@ -170,10 +165,17 @@ class analyzer():
         self.build_1Dhistogram_for_pu(True,command=cmd_str.del_h1_pucommand)
         self.build_2Dhistogram_for_lep(True,command=cmd_str.del_h2_lepcommand)
         self.build_2Dhistogram_for_2lep(True,command=cmd_str.del_h2_2lepcommand)
-        self.build_tag_histogram(True)
 
 class ee_analyzer(analyzer):
+    def __init__(self,infilename,outfilename):
+        super().__init__(infilename,outfilename)
     def selection(self):
+        self.build_1Dhistogram_for_lep()
+        self.build_1Dhistogram_for_njet()
+        self.build_1Dhistogram_for_met()
+        self.build_1Dhistogram_for_pu()
+        self.build_2Dhistogram_for_lep()
+        self.build_2Dhistogram_for_2lep()
         exec(cmd_str.fill_histocommand.format(3,'DY_l1_pt','DY_l1_eta','DY_l1_phi','DY_l1_mass','DY_l2_pt','DY_l2_eta','DY_l2_phi','DY_l2_mass','self.tree.Electron_RECO_SF[self.tree.DY_l1_id]*self.tree.Electron_RECO_SF[self.tree.DY_l2_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.DY_l1_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.DY_l2_id]','ttc_l1_pt','ttc_l1_eta','ttc_l1_phi','ttc_l1_mass','ttc_l2_pt','ttc_l2_eta','ttc_l2_phi','ttc_l2_mass','self.tree.Electron_RECO_SF[self.tree.ttc_l1_id]*self.tree.Electron_RECO_SF[self.tree.ttc_l2_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.ttc_l1_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.ttc_l2_id]','self.tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL or self.tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or self.tree.HLT_passEle32WPTight or self.tree.HLT_Ele35_WPTight_Gsf','self.tree.HLT_PFMET120_PFMHT120_IDTight or self.tree.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight or self.tree.HLT_PFHT500_PFMET100_PFMHT100_IDTight or self.tree.HLT_PFHT700_PFMET85_PFMHT85_IDTight or self.tree.HLT_PFHT800_PFMET75_PFMHT75_IDTight'))
         self.deactivate()
 
