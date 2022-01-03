@@ -1,23 +1,22 @@
 import os 
 import ROOT
 from ROOT import TFile, TTree, TLorentzVector,TH1F,TEfficiency,TH2D
-
 CURRENT_WORKDIR = os.getcwd()
 from itertools import product
-import utils.build_histogram as bh
 import utils.command_string as cmd_str
 import math
 from array import array
 from math import sqrt
 
 class analyzer():
-    def __init__(self,infilename,outfilename):
+    def __init__(self,infilename,outfilename,channel='ee'):
         self.infilename = infilename
+        self.infilebasename = os.path.basename(infilename).split('root')[0]
         self.infile = TFile.Open(infilename)
         self.tree =  self.infile.Get('Events')
         self.entries = self.tree.GetEntries()
-        print('Input File: {0}, total events: {1}'.format(self.infilename,self.entries))
-        self.outfile = TFile.Open(outfilename+'.root',"RECREATE")
+        print('Input File: {0}, total events: {1}, Channel: {2}'.format(self.infilename,self.entries,channel))
+        self.outfile = TFile.Open(outfilename,"RECREATE")
         print('File: {0} created.'.format(outfilename))
         self.l1ptbin=array('d',[20, 40, 50, 65, 80, 100, 200])
         self.l2ptbin=array('d',[20, 40, 50, 65, 80, 100, 200])
@@ -27,10 +26,67 @@ class analyzer():
         self.tdlepetabin=array('d',[0,0.4,0.9,1.5,2.5])
         self.tdl1ptbin=array('d',[20,40,50,65,80,100,200])
         self.tdl2ptbin=array('d',[20,40,50,65,80,100,200])
-        
         self.l1p4 = TLorentzVector()
         self.l2p4 = TLorentzVector()
-        #self.build_tag_histogram(True)
+        #Initialize Histograms
+        self.build_1Dhistogram_for_lep()
+        self.build_1Dhistogram_for_njet()
+        self.build_1Dhistogram_for_met()
+        #self.build_1Dhistogram_for_pu()
+        self.build_2Dhistogram_for_lep()
+        self.build_2Dhistogram_for_2lep()
+        try:
+            if channel == 'ee' or channel == 'mm':
+                self.DY_l1_pt = 'DY_l1_pt'
+                self.DY_l1_eta = 'DY_l1_eta'
+                self.DY_l1_phi = 'DY_l1_phi'
+                self.DY_l1_mass = 'DY_l1_mass'
+                
+                self.DY_l2_pt = 'DY_l2_pt'
+                self.DY_l2_eta = 'DY_l2_eta'
+                self.DY_l2_phi = 'DY_l2_phi'
+                self.DY_l2_mass = 'DY_l2_mass'
+                if channel =='ee':
+                    self.region = 3
+                    weight = 'self.tree.Electron_RECO_SF[{0}]*self.tree.Electron_RECO_SF[{1}]*self.tree.Electron_CutBased_TightID_SF[{0}]*self.tree.Electron_CutBased_TightID_SF[{1}]'
+                    self.HLT_path1 = 'self.tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL or self.tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or self.tree.HLT_passEle32WPTight or self.tree.HLT_Ele35_WPTight_Gsf'
+                else:
+                    self.region = 1
+                    weight ='self.tree.Muon_CutBased_TightID_SF[{0}]*self.tree.Muon_CutBased_TightID_SF[{1}]*self.tree.Muon_TightRelIso_TightIDandIPCut_SF[{0}]*self.tree.Muon_TightRelIso_TightIDandIPCut_SF[{1}]'
+                    self.HLT_path1 = 'self.tree.HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 or self.tree.HLT_IsoMu27'
+            
+            elif channel == 'em':
+                self.DY_l1_pt = 'Muon_corrected_pt[self.tree.DY_l1_id]'
+                self.DY_l1_eta = 'Muon_eta[self.tree.DY_l1_id]'
+                self.DY_l1_phi = 'Muon_phi[self.tree.DY_l1_id]'
+                self.DY_l1_mass = 'Muon_mass[self.tree.DY_l1_id]'
+               
+                self.DY_l2_pt = 'Electron_pt[self.tree.DY_l2_id]'
+                self.DY_l2_eta = 'Electron_eta[self.tree.DY_l2_id]'
+                self.DY_l2_phi = 'Electron_phi[self.tree.DY_l2_id]'
+                self.DY_l2_mass = 'Electron_mass[self.tree.DY_l2_id]'
+                self.region = 2
+                weight = 'self.tree.Muon_CutBased_TightID_SF[{0}]*self.tree.Muon_TightRelIso_TightIDandIPCut_SF[{0}]*self.tree.Electron_RECO_SF[{1}]*self.tree.Electron_CutBased_TightID_SF[{1}]'
+                self.HLT_path1 = 'self.tree.HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ or self.tree.HLT_Mu12_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ or self.tree.HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or self.tree.HLT_IsoMu27 or self.tree.HLT_passEle32WPTight or self.tree.HLT_Ele35_WPTight_Gsf'
+            else:
+                raise ValueError
+        except ValueError as exc:
+            raise RuntimeError('No such channel :{}'.format(channel))
+        
+        self.ttc_l1_pt = 'ttc_l1_pt'
+        self.ttc_l1_eta = 'ttc_l1_eta'
+        self.ttc_l1_phi = 'ttc_l1_phi'
+        self.ttc_l1_mass = 'ttc_l1_mass'
+    
+        self.ttc_l2_pt = 'ttc_l2_pt'
+        self.ttc_l2_eta = 'ttc_l2_eta'
+        self.ttc_l2_phi = 'ttc_l2_phi'
+        self.ttc_l2_mass = 'ttc_l2_mass'
+        
+        self.HLT_path2 = 'self.tree.HLT_PFMET120_PFMHT120_IDTight or self.tree.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight or self.tree.HLT_PFHT500_PFMET100_PFMHT100_IDTight or self.tree.HLT_PFHT700_PFMET85_PFMHT85_IDTight or self.tree.HLT_PFHT800_PFMET75_PFMHT75_IDTight'
+        self.DYweight = weight.format('self.tree.DY_l1_id','self.tree.DY_l2_id') 
+        self.TTCweight = weight.format('self.tree.ttc_l1_id','self.tree.ttc_l2_id') 
+
     def build_1Dhistogram_for_lep(self,deactivate=False,command=cmd_str.h1_lepcommand):
         states = ['pre_','']
         lep_orders = ['l1','l2']
@@ -87,7 +143,6 @@ class analyzer():
                 c =command.format(state,condition,obj,xtitle)
             else:
                 c =command.format(state,condition,obj)
-            #print(c)
             exec(c)
     def build_1Dhistogram_for_pu(self,deactivate=False,command=cmd_str.h1_pucommand):
         states = ['','pre_']
@@ -97,7 +152,6 @@ class analyzer():
                 c =command.format(state,condition)
             else:
                 c =command.format(state,condition)
-            #print(c)
             exec(c)
     def build_2Dhistogram_for_lep(self,deactivate=False,command=cmd_str.h2_lepcommand):
         states = ['','pre_']
@@ -128,7 +182,6 @@ class analyzer():
         objects = ['','pv','jet','MET']
         _xtitle = 'Leading Lepton #||'
         _ytitle = 'SubLeading Lepton #||' 
-        
         for state,observable,condition,obj in product(states,observables,conditions,objects):
             if condition == '' and obj != '' : continue
             elif condition != '' and obj == '': continue
@@ -155,27 +208,6 @@ class analyzer():
             exec(c)
         
     def selection(self):
-        pass
-    def write(self):
-        pass
-    def deactivate(self):
-        self.build_1Dhistogram_for_lep(True,command=cmd_str.del_h1_lepcommand)
-        self.build_1Dhistogram_for_njet(True,command=cmd_str.del_h1_njetcommand)
-        self.build_1Dhistogram_for_met(True,command=cmd_str.del_h1_metcommand)
-        self.build_1Dhistogram_for_pu(True,command=cmd_str.del_h1_pucommand)
-        self.build_2Dhistogram_for_lep(True,command=cmd_str.del_h2_lepcommand)
-        self.build_2Dhistogram_for_2lep(True,command=cmd_str.del_h2_2lepcommand)
-
-class ee_analyzer(analyzer):
-    def __init__(self,infilename,outfilename):
-        super().__init__(infilename,outfilename)
-    def selection(self):
-        self.build_1Dhistogram_for_lep()
-        self.build_1Dhistogram_for_njet()
-        self.build_1Dhistogram_for_met()
-        self.build_1Dhistogram_for_pu()
-        self.build_2Dhistogram_for_lep()
-        self.build_2Dhistogram_for_2lep()
-        exec(cmd_str.fill_histocommand.format(3,'DY_l1_pt','DY_l1_eta','DY_l1_phi','DY_l1_mass','DY_l2_pt','DY_l2_eta','DY_l2_phi','DY_l2_mass','self.tree.Electron_RECO_SF[self.tree.DY_l1_id]*self.tree.Electron_RECO_SF[self.tree.DY_l2_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.DY_l1_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.DY_l2_id]','ttc_l1_pt','ttc_l1_eta','ttc_l1_phi','ttc_l1_mass','ttc_l2_pt','ttc_l2_eta','ttc_l2_phi','ttc_l2_mass','self.tree.Electron_RECO_SF[self.tree.ttc_l1_id]*self.tree.Electron_RECO_SF[self.tree.ttc_l2_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.ttc_l1_id]*self.tree.Electron_CutBased_TightID_SF[self.tree.ttc_l2_id]','self.tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL or self.tree.HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ or self.tree.HLT_passEle32WPTight or self.tree.HLT_Ele35_WPTight_Gsf','self.tree.HLT_PFMET120_PFMHT120_IDTight or self.tree.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight or self.tree.HLT_PFHT500_PFMET100_PFMHT100_IDTight or self.tree.HLT_PFHT700_PFMET85_PFMHT85_IDTight or self.tree.HLT_PFHT800_PFMET75_PFMHT75_IDTight'))
-        self.deactivate()
+        
+        exec(cmd_str.fill_histocommand.format(self.region,self.DY_l1_pt,self.DY_l1_eta,self.DY_l1_phi,self.DY_l1_mass,self.DY_l2_pt,self.DY_l2_eta,self.DY_l2_phi,self.DY_l2_mass,self.DYweight,self.ttc_l1_pt,self.ttc_l1_eta,self.ttc_l1_phi,self.ttc_l1_mass,self.ttc_l2_pt,self.ttc_l2_eta,self.ttc_l2_phi,self.ttc_l2_mass,self.TTCweight,self.HLT_path1,self.HLT_path2))
 

@@ -1,3 +1,9 @@
+'''
+
+h1_XXcommmand -> Just used to set up histogram
+del_h1_XXcommand-> Just used to delete histogram
+
+'''
 h1_lepcommand ='''
 self.h1_{0}{1}{2}{3}{4} = TH1F("{0}{1}{2}{3}{4}","{0}{1}{2}{3}{4}",len(self.{5})-{6},self.{7})
 self.h1_{0}{1}{2}{3}{4}.Sumw2()
@@ -6,7 +12,7 @@ self.h1_{0}{1}{2}{3}{4}.GetXaxis().SetTitle('{8}')
 self.h1_{0}{1}{2}{3}{4}.GetYaxis().SetTitle('Efficiency')
 self.h1_{0}{1}{2}{3}{4}.SetStats(0)'''
 
-del_h1_lepcommand='''self.h1_{0}{1}{2}{3}{4} = None'''
+del_h1_lepcommand='''del self.h1_{0}{1}{2}{3}{4}'''
 
 h1_njetcommand ='''
 self.h1_{0}njet{1}{2}= TH1F("{0}njet{1}{2}","{0}njet{1}{2}",len(self.jetbin)-1,self.jetbin)
@@ -16,7 +22,7 @@ self.h1_{0}njet{1}{2}.GetXaxis().SetTitle('{3}')
 self.h1_{0}njet{1}{2}.GetYaxis().SetTitle('Efficiency')
 self.h1_{0}njet{1}{2}.SetStats(0)'''
 
-del_h1_njetcommand='''self.h1_{0}njet{1}{2} = None'''
+del_h1_njetcommand='''del self.h1_{0}njet{1}{2}'''
 
 h1_metcommand ='''
 self.h1_{0}met{1}{2}= TH1F("{0}met{1}{2}","{0}met{1}{2}",len(self.metbin)-1,self.metbin)
@@ -26,7 +32,7 @@ self.h1_{0}met{1}{2}.GetXaxis().SetTitle('{3}')
 self.h1_{0}met{1}{2}.GetYaxis().SetTitle('Efficiency')
 self.h1_{0}met{1}{2}.SetStats(0)'''
 
-del_h1_metcommand='''self.h1_{0}met{1}{2} = None'''
+del_h1_metcommand='''del self.h1_{0}met{1}{2}'''
 
 h1_pucommand ='''
 self.h1_{0}pu{1}= TH1F("{0}pu{1}","{0}pu{1}",40,0,80)
@@ -34,7 +40,7 @@ self.h1_{0}pu{1}.Sumw2()
 self.h1_{0}pu{1}.SetMinimum(0)
 self.h1_{0}pu{1}.SetStats(0)'''
 
-del_h1_pucommand='''self.h1_{0}pu{1} = None'''
+del_h1_pucommand='''del h1_{0}pu{1}'''
 
 h2_lepcommand='''
 self.h2_{0}{1}pteta{2}{3}= TH2D("{0}{1}pteta{2}{3}","{0}{1}pteta{2}{3}",6,self.tdl1ptbin,4,self.tdlepetabin)
@@ -44,7 +50,7 @@ self.h2_{0}{1}pteta{2}{3}.GetXaxis().SetTitle('{4}')
 self.h2_{0}{1}pteta{2}{3}.GetYaxis().SetTitle('{5}')
 self.h2_{0}{1}pteta{2}{3}.SetStats(0)'''
 
-del_h2_lepcommand='''self.h2_{0}{1}pteta{2}{3} = None'''
+del_h2_lepcommand='''del h2_{0}{1}pteta{2}{3}'''
 
 h2_2lepcommand='''
 self.h2_{0}l1l2{1}{2}{3}= TH2D("{0}l1l2{1}{2}{3}","{0}l1l2{1}{2}{3}",{4},{5},{6},{7})
@@ -54,7 +60,22 @@ self.h2_{0}l1l2{1}{2}{3}.GetXaxis().SetTitle('{8}')
 self.h2_{0}l1l2{1}{2}{3}.GetYaxis().SetTitle('{9}')
 self.h2_{0}l1l2{1}{2}{3}.SetStats(0)'''
 
-del_h2_2lepcommand='''self.h2_{0}l1l2{1}{2}{3} = None'''
+del_h2_2lepcommand='''del h2_{0}l1l2{1}{2}{3}'''
+
+'''
+fill_histocommand explaination:
+{0}: 
+    1 for ee channel 
+    2 for em channel
+    3 for mm channel
+{1}~{8} and {10}~{17}:
+    Di-Leptons Four momentum in TTC or DY process region respectively.
+{9}and{18}: 
+    SF factor for leptons, different by different in the context of channel in DY process and TTC process.
+{19} and {20}:
+    HLT selection and offline selection
+'''
+
 
 fill_histocommand='''
 self.all_events1 = TH1F('all_events1','lep_tag',1,0,1)
@@ -63,9 +84,10 @@ self.all_events3 = TH1F('all_events3','lepmet_tag',1,0,1)
 self.pass_lep_trigger= TH1F('pass_lep_trigger','pass_lep_trigger',1,0,1)
 self.pass_met_trigger= TH1F('pass_met_trigger','pass_met_trigger',1,0,1)
 self.pass_lepmet_trigger= TH1F('pass_lepmet_trigger','pass_lepmet_trigger',1,0,1)
-for ientry in range(0,200000):
+
+for ientry in range(0,self.entries):
     self.tree.GetEntry(ientry)
-    if 'TT' in self.infilename:
+    if 'TT' in self.infilebasename:
         met = self.tree.MET_T1Smear_pt
     else:
         met =  self.tree.MET_T1_pt
@@ -76,14 +98,14 @@ for ientry in range(0,200000):
         if self.tree.DY_region == {0}:
             self.l1p4.SetPtEtaPhiM(self.tree.{1},self.tree.{2},self.tree.{3},self.tree.{4})
             self.l2p4.SetPtEtaPhiM(self.tree.{5},self.tree.{6},self.tree.{7},self.tree.{8})        
-            if 'TT' in self.infilename:
+            if 'TT' in self.infilebasename:
                 weight = {9} * self.tree.puWeight * self.tree.PrefireWeight
             else:
                 weight =1.
         if self.tree.ttc_region == {0}:
             self.l1p4.SetPtEtaPhiM(self.tree.{10},self.tree.{11},self.tree.{12},self.tree.{13})
             self.l2p4.SetPtEtaPhiM(self.tree.{14},self.tree.{15},self.tree.{16},self.tree.{17} )        
-            if 'TT' in self.infilename:
+            if 'TT' in self.infilebasename:
                 weight = {18} * self.tree.puWeight * self.tree.PrefireWeight
             else:
                 weight =1.
@@ -277,8 +299,7 @@ for obj,x in zip(['lep','met','lepmet'],[2,1,3]):
 
 alpha=(lepeff*meteff)/lepmeteff
 alphaerr= sqrt(lepeff_err*lepeff_err*meteff*meteff + lepeff*lepeff*meteff_err*meteff_err + lepeff*lepeff*meteff*meteff*lepmeteff_err*lepmeteff_err/(lepmeteff*lepmeteff))/lepmeteff
-print('alpha:{0} +- {1}'.format( alpha,alphaerr))
-
+#print('alpha: '+str(alpha)+'+-'+str(alphaerr))
 self.outfile.cd()
 
 #Histogram Write

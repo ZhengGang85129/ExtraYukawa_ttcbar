@@ -9,7 +9,7 @@ import importlib
 from ROOT import TFile
 import utils.analyzer as analyzer 
 
-def trigger_calc(filename,outdir):
+def trigger_calc(filename,outdir,channel = 'ee'):
     '''
     If filename is not a path, raise an error.
     '''
@@ -23,10 +23,9 @@ def trigger_calc(filename,outdir):
     
     file_basename = os.path.basename(filename).split(".root")[0] #Take out filename from its path
     
-    outfilenames = [os.path.join(outdir,file_basename+subname+'.root') for subname in ['_ee','_em','_mm']]
+    outfilenames = os.path.join(outdir,file_basename+'_'+channel+'.root')
     
-    ee_analyzer = analyzer.ee_analyzer(infilename=filename,outfilename=outfilenames[0])
-    ee_analyzer.selection()
-    #ee_analyzer.deactivate()
+    production = analyzer.analyzer(infilename=filename,outfilename=outfilenames,channel=channel)
+    production.selection()
     
 

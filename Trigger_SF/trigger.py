@@ -5,6 +5,8 @@ CURRENT_WORKDIR = os.getcwd()
 sys.path.append(CURRENT_WORKDIR)
 import utils.listoutdata2txt as d2t
 import utils.trigger_utils as trig_tool 
+import argparse
+import utils.multipleprocess as mp
 
 dir_list = ['./data','./data/trigger_data','./data/datalist']
 path_nano = '/eos/user/m/melu/TTC_Nanov8_new'
@@ -22,7 +24,11 @@ def main(create_structure=True):
         d2t.generatefile(datalistname='./data/datalist/triggerinput.txt',patterns=['MET.root','TTTo2L*.root','TTTo1L*.root'],path_to_data=path_nano)
     with open(datalistname,'r') as f:
         for idx,filename in enumerate(f.readlines()):
-            if idx == 1:
-                trig_tool.trigger_calc(filename=filename[:-1],outdir='./data/trigger_data')
+            if idx ==0:
+                MP = mp.multiprocess()
+                for channel in ['ee','em','mm']:
+                    MP.register(trig_tool.trigger_calc,process_args=[filename[:-1],'./data/trigger_data',channel])
+                #trig_tool.trigger_calc(filename=filename[:-1],outdir='./data/trigger_data')
+                MP.run()
 
-main(False)
+main(True)
