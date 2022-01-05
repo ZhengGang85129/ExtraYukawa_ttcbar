@@ -8,12 +8,16 @@ import utils.trigger_utils as trig_tool
 import argparse
 import utils.multipleprocess as mp
 
-dir_list = ['./data','./data/trigger_data','./data/datalist']
-path_nano = '/eos/user/m/melu/TTC_Nanov8_new'
+parser = argparse.ArgumentParser()
 
-datalistname = './data/datalist/triggerinput.txt'
+parser.add_argument('-c','--create',help='Create Directary for storing histogram files if specify.',action='store_true')
+parser.add_argument('-s','--sources',help='path of nano file sources',type=str,default='/eos/user/m/melu/TTC_Nanov8_new')
+args = parser.parse_args()
 
-def main(create_structure=True):
+
+def trigger_store(create_structure=True,src=''):
+    dir_list = ['./data','./data/trigger_data','./data/datalist']
+    datalistname = './data/datalist/triggerinput.txt'
     if create_structure:
         for d in dir_list:
             if os.path.isdir(d):
@@ -21,14 +25,13 @@ def main(create_structure=True):
             else:
                 print('Directory: {} created!'.format(d))
                 os.mkdir(d)
-        d2t.generatefile(datalistname='./data/datalist/triggerinput.txt',patterns=['MET.root','TTTo2L*.root','TTTo1L*.root'],path_to_data=path_nano)
-    with open(datalistname,'r') as f:
-        for idx,filename in enumerate(f.readlines()):
-            if idx ==0:
+        d2t.generatefile(datalistname,patterns=['MET.root','TTTo2L*.root','TTTo1L*.root'],path_to_data=src)
+    else:
+        with open(datalistname,'r') as f:
+            for idx,filename in enumerate(f.readlines()):
                 MP = mp.multiprocess()
                 for channel in ['ee','em','mm']:
                     MP.register(trig_tool.trigger_calc,process_args=[filename[:-1],'./data/trigger_data',channel])
-                #trig_tool.trigger_calc(filename=filename[:-1],outdir='./data/trigger_data')
                 MP.run()
 
-main(True)
+trigger_store(args.create,args.sources)

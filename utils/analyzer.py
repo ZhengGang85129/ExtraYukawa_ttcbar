@@ -16,6 +16,7 @@ class analyzer():
         self.tree =  self.infile.Get('Events')
         self.entries = self.tree.GetEntries()
         print('Input File: {0}, total events: {1}, Channel: {2}'.format(self.infilename,self.entries,channel))
+        self.outfilename = outfilename
         self.outfile = TFile.Open(outfilename,"RECREATE")
         print('File: {0} created.'.format(outfilename))
         self.l1ptbin=array('d',[20, 40, 50, 65, 80, 100, 200])

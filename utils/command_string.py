@@ -91,7 +91,7 @@ for ientry in range(0,self.entries):
         met = self.tree.MET_T1Smear_pt
     else:
         met =  self.tree.MET_T1_pt
-    if ientry%10000 ==0: print('processing :' +str(ientry))
+    if ientry%50000 ==0: print('Prodcution Progress for '+self.outfilename+' :' +str(round(ientry/self.entries,4)*100)+'%')
     if not (self.tree.Flag_goodVertices and self.tree.Flag_globalSuperTightHalo2016Filter and self.tree.Flag_HBHENoiseFilter and self.tree.Flag_HBHENoiseIsoFilter and self.tree.Flag_EcalDeadCellTriggerPrimitiveFilter and self.tree.Flag_BadPFMuonFilter and self.tree.Flag_eeBadScFilter and self.tree.Flag_ecalBadCalibFilter):
         
         if not (self.tree.DY_region == {0} or self.tree.ttc_region == {0}):continue

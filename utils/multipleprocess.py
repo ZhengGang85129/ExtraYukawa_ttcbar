@@ -1,5 +1,6 @@
 import multiprocessing as mp
 import os
+import threading  as th
 
 def nworkers():
     cpus = mp.cpu_count()
@@ -20,6 +21,20 @@ class multiprocess:
             p = mp.Process(target=process,args=(args))
             p.start()
 
+class multithread:
+    def __init__(self):
+        self.thread_list =[]
+        self.thread_args_list =[]
+    def register(self,thread,thread_args=[]):
+        self.thread_list.append(thread)
+        self.thread_args_list.append(thread_args)
+
+    def run(self):
+        for thread,args in zip(self.thread_list,self.thread_args_list):
+            p = th.Thread(target=thread,args=(args))
+            p.start()
+            p.join()
+
 def calculate(arg):
     print(arg)
     i = 0
@@ -31,8 +46,3 @@ def calculate(arg):
 if __name__ == '__main__':
     nworkers()
 
-    for i in range(10):
-        p = mp.Process(target=calculate ,args=(i,) )
-        p.start()
-
-        p.join()
