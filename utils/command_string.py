@@ -91,182 +91,183 @@ for ientry in range(0,self.entries):
         met = self.tree.MET_T1Smear_pt
     else:
         met =  self.tree.MET_T1_pt
-    if ientry%50000 ==0: print('Prodcution Progress for '+self.outfilename+' :' +str(round(ientry/self.entries,4)*100)+'%')
+    if ientry%150000 ==0: print('Prodcution Progress for '+self.outfilename+' :' +str(round(ientry/self.entries,4)*100)+'%')
     if not (self.tree.Flag_goodVertices and self.tree.Flag_globalSuperTightHalo2016Filter and self.tree.Flag_HBHENoiseFilter and self.tree.Flag_HBHENoiseIsoFilter and self.tree.Flag_EcalDeadCellTriggerPrimitiveFilter and self.tree.Flag_BadPFMuonFilter and self.tree.Flag_eeBadScFilter and self.tree.Flag_ecalBadCalibFilter):
+        continue
         
-        if not (self.tree.DY_region == {0} or self.tree.ttc_region == {0}):continue
-        if self.tree.DY_region == {0}:
-            self.l1p4.SetPtEtaPhiM(self.tree.{1},self.tree.{2},self.tree.{3},self.tree.{4})
-            self.l2p4.SetPtEtaPhiM(self.tree.{5},self.tree.{6},self.tree.{7},self.tree.{8})        
-            if 'TT' in self.infilebasename:
-                weight = {9} * self.tree.puWeight * self.tree.PrefireWeight
-            else:
-                weight =1.
-        if self.tree.ttc_region == {0}:
-            self.l1p4.SetPtEtaPhiM(self.tree.{10},self.tree.{11},self.tree.{12},self.tree.{13})
-            self.l2p4.SetPtEtaPhiM(self.tree.{14},self.tree.{15},self.tree.{16},self.tree.{17} )        
-            if 'TT' in self.infilebasename:
-                weight = {18} * self.tree.puWeight * self.tree.PrefireWeight
-            else:
-                weight =1.
+    if not (self.tree.DY_region == {0} or self.tree.ttc_region == {0}):continue
+    if self.tree.DY_region == {0}:
+        self.l1p4.SetPtEtaPhiM(self.tree.{1},self.tree.{2},self.tree.{3},self.tree.{4})
+        self.l2p4.SetPtEtaPhiM(self.tree.{5},self.tree.{6},self.tree.{7},self.tree.{8})        
+        if 'TT' in self.infilebasename:
+            weight = {9} * self.tree.puWeight * self.tree.PrefireWeight
+        else:
+            weight =1.
+    if self.tree.ttc_region == {0}:
+        self.l1p4.SetPtEtaPhiM(self.tree.{10},self.tree.{11},self.tree.{12},self.tree.{13})
+        self.l2p4.SetPtEtaPhiM(self.tree.{14},self.tree.{15},self.tree.{16},self.tree.{17} )        
+        if 'TT' in self.infilebasename:
+            weight = {18} * self.tree.puWeight * self.tree.PrefireWeight
+        else:
+            weight =1.
 
-        if (self.l1p4+self.l2p4).M() < 20:
-            continue
-        if not(self.l1p4.Pt() >30 or self.l2p4.Pt() >30):
-            continue
-        if (self.l1p4.DeltaR(self.l2p4)<0.3):continue
-        if met <100:continue
+    if (self.l1p4+self.l2p4).M() < 20:
+        continue
+    if not(self.l1p4.Pt() >30 or self.l2p4.Pt() >30):
+        continue
+    if (self.l1p4.DeltaR(self.l2p4)<0.3):continue
+    if met <100:continue
 
-        self.all_events1.Fill(0.5,weight)
-        self.all_events2.Fill(0.5,weight)
-        self.all_events3.Fill(0.5,weight)
-        if({19}):
-            self.pass_lep_trigger.Fill(0.5,weight)
-        if({20}):
-            self.pass_met_trigger.Fill(0.5,weight)
-            self.h1_pre_l1pt.Fill(self.l1p4.Pt(),weight)
-            self.h1_pre_l1eta.Fill(self.l1p4.Eta(),weight)
-            self.h1_pre_l2pt.Fill(self.l2p4.Pt(),weight)
-            self.h1_pre_l2eta.Fill(self.l2p4.Eta(),weight)
-            self.h1_pre_njet.Fill(self.tree.n_tight_jet,weight)
-            self.h1_pre_met.Fill(met,weight)
-            self.h2_pre_l1pteta.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-            self.h2_pre_l2pteta.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-            self.h2_pre_l1l2pt.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-            self.h2_pre_l1l2eta.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-            if self.tree.n_tight_jet > 3 :
-                self.h1_pre_l1pt_highjet.Fill(self.l1p4.Pt(),weight)
-                self.h1_pre_l1eta_highjet.Fill(self.l1p4.Eta(),weight)
-                self.h1_pre_l2pt_highjet.Fill(self.l2p4.Pt(),weight)
-                self.h1_pre_l2eta_highjet.Fill(self.l2p4.Eta(),weight)
+    self.all_events1.Fill(0.5,weight)
+    self.all_events2.Fill(0.5,weight)
+    self.all_events3.Fill(0.5,weight)
+    if({19}):
+        self.pass_lep_trigger.Fill(0.5,weight)
+    if({20}):
+        self.pass_met_trigger.Fill(0.5,weight)
+        self.h1_pre_l1pt.Fill(self.l1p4.Pt(),weight)
+        self.h1_pre_l1eta.Fill(self.l1p4.Eta(),weight)
+        self.h1_pre_l2pt.Fill(self.l2p4.Pt(),weight)
+        self.h1_pre_l2eta.Fill(self.l2p4.Eta(),weight)
+        self.h1_pre_njet.Fill(self.tree.n_tight_jet,weight)
+        self.h1_pre_met.Fill(met,weight)
+        self.h2_pre_l1pteta.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+        self.h2_pre_l2pteta.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+        self.h2_pre_l1l2pt.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+        self.h2_pre_l1l2eta.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+        if self.tree.n_tight_jet > 3 :
+            self.h1_pre_l1pt_highjet.Fill(self.l1p4.Pt(),weight)
+            self.h1_pre_l1eta_highjet.Fill(self.l1p4.Eta(),weight)
+            self.h1_pre_l2pt_highjet.Fill(self.l2p4.Pt(),weight)
+            self.h1_pre_l2eta_highjet.Fill(self.l2p4.Eta(),weight)
 
-                self.h2_pre_l1pteta_highjet.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                self.h2_pre_l2pteta_highjet.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                self.h2_pre_l1l2pt_highjet.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                self.h2_pre_l1l2eta_highjet.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-            else:
-                self.h1_pre_l1pt_lowjet.Fill(self.l1p4.Pt(),weight)
-                self.h1_pre_l1eta_lowjet.Fill(self.l1p4.Eta(),weight)
-                self.h1_pre_l2pt_lowjet.Fill(self.l2p4.Pt(),weight)
-                self.h1_pre_l2eta_lowjet.Fill(self.l2p4.Eta(),weight)
-                
-                self.h2_pre_l1pteta_lowjet.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                self.h2_pre_l2pteta_lowjet.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                self.h2_pre_l1l2pt_lowjet.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                self.h2_pre_l1l2eta_lowjet.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-            if (self.tree.PV_npvs) > 30:
-                self.h1_pre_l1pt_highpv.Fill(self.l1p4.Pt(),weight)
-                self.h1_pre_l1eta_highpv.Fill(self.l1p4.Eta(),weight)
-                self.h1_pre_l2pt_highpv.Fill(self.l2p4.Pt(),weight)
-                self.h1_pre_l2eta_highpv.Fill(self.l2p4.Eta(),weight)
-                
-                self.h2_pre_l1pteta_highpv.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                self.h2_pre_l2pteta_highpv.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                self.h2_pre_l1l2pt_highpv.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                self.h2_pre_l1l2eta_highpv.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-            else:
-                self.h1_pre_l1pt_lowpv.Fill(self.l1p4.Pt(),weight)
-                self.h1_pre_l1eta_lowpv.Fill(self.l1p4.Eta(),weight)
-                self.h1_pre_l2pt_lowpv.Fill(self.l2p4.Pt(),weight)
-                self.h1_pre_l2eta_lowpv.Fill(self.l2p4.Eta(),weight)
-                
-                self.h2_pre_l1pteta_lowpv.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                self.h2_pre_l2pteta_lowpv.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                self.h2_pre_l1l2pt_lowpv.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                self.h2_pre_l1l2eta_lowpv.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-            if met > 150:
-                self.h1_pre_l1pt_highMET.Fill(self.l1p4.Pt(),weight)
-                self.h1_pre_l1eta_highMET.Fill(self.l1p4.Eta(),weight)
-                self.h1_pre_l2pt_highMET.Fill(self.l2p4.Pt(),weight)
-                self.h1_pre_l2eta_highMET.Fill(self.l2p4.Eta(),weight)
-                
-                self.h2_pre_l1pteta_highMET.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                self.h2_pre_l2pteta_highMET.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                self.h2_pre_l1l2pt_highMET.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                self.h2_pre_l1l2eta_highMET.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-            else:
-                self.h1_pre_l1pt_lowMET.Fill(self.l1p4.Pt(),weight)
-                self.h1_pre_l1eta_lowMET.Fill(self.l1p4.Eta(),weight)
-                self.h1_pre_l2pt_lowMET.Fill(self.l2p4.Pt(),weight)
-                self.h1_pre_l2eta_lowMET.Fill(self.l2p4.Eta(),weight)
-                
-                self.h2_pre_l1pteta_lowMET.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                self.h2_pre_l2pteta_lowMET.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                self.h2_pre_l1l2pt_lowMET.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                self.h2_pre_l1l2eta_lowMET.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+            self.h2_pre_l1pteta_highjet.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+            self.h2_pre_l2pteta_highjet.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+            self.h2_pre_l1l2pt_highjet.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+            self.h2_pre_l1l2eta_highjet.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+        else:
+            self.h1_pre_l1pt_lowjet.Fill(self.l1p4.Pt(),weight)
+            self.h1_pre_l1eta_lowjet.Fill(self.l1p4.Eta(),weight)
+            self.h1_pre_l2pt_lowjet.Fill(self.l2p4.Pt(),weight)
+            self.h1_pre_l2eta_lowjet.Fill(self.l2p4.Eta(),weight)
             
-            if({19}):
-                self.pass_lepmet_trigger.Fill(0.5,weight)
-                self.h1_l1pt.Fill(self.l1p4.Pt(),weight)
-                self.h1_l1eta.Fill(self.l1p4.Eta(),weight)
-                self.h1_l2pt.Fill(self.l2p4.Pt(),weight)
-                self.h1_l2eta.Fill(self.l2p4.Eta(),weight)
-                self.h1_njet.Fill(self.tree.n_tight_jet,weight)
-                self.h1_met.Fill(met,weight)
-                self.h2_l1pteta.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                self.h2_l2pteta.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                self.h2_l1l2pt.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                self.h2_l1l2eta.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-                if self.tree.n_tight_jet > 3 :
-                    self.h1_l1pt_highjet.Fill(self.l1p4.Pt(),weight)
-                    self.h1_l1eta_highjet.Fill(self.l1p4.Eta(),weight)
-                    self.h1_l2pt_highjet.Fill(self.l2p4.Pt(),weight)
-                    self.h1_l2eta_highjet.Fill(self.l2p4.Eta(),weight)
+            self.h2_pre_l1pteta_lowjet.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+            self.h2_pre_l2pteta_lowjet.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+            self.h2_pre_l1l2pt_lowjet.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+            self.h2_pre_l1l2eta_lowjet.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+        if (self.tree.PV_npvs) > 30:
+            self.h1_pre_l1pt_highpv.Fill(self.l1p4.Pt(),weight)
+            self.h1_pre_l1eta_highpv.Fill(self.l1p4.Eta(),weight)
+            self.h1_pre_l2pt_highpv.Fill(self.l2p4.Pt(),weight)
+            self.h1_pre_l2eta_highpv.Fill(self.l2p4.Eta(),weight)
+            
+            self.h2_pre_l1pteta_highpv.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+            self.h2_pre_l2pteta_highpv.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+            self.h2_pre_l1l2pt_highpv.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+            self.h2_pre_l1l2eta_highpv.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+        else:
+            self.h1_pre_l1pt_lowpv.Fill(self.l1p4.Pt(),weight)
+            self.h1_pre_l1eta_lowpv.Fill(self.l1p4.Eta(),weight)
+            self.h1_pre_l2pt_lowpv.Fill(self.l2p4.Pt(),weight)
+            self.h1_pre_l2eta_lowpv.Fill(self.l2p4.Eta(),weight)
+            
+            self.h2_pre_l1pteta_lowpv.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+            self.h2_pre_l2pteta_lowpv.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+            self.h2_pre_l1l2pt_lowpv.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+            self.h2_pre_l1l2eta_lowpv.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+        if met > 150:
+            self.h1_pre_l1pt_highMET.Fill(self.l1p4.Pt(),weight)
+            self.h1_pre_l1eta_highMET.Fill(self.l1p4.Eta(),weight)
+            self.h1_pre_l2pt_highMET.Fill(self.l2p4.Pt(),weight)
+            self.h1_pre_l2eta_highMET.Fill(self.l2p4.Eta(),weight)
+            
+            self.h2_pre_l1pteta_highMET.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+            self.h2_pre_l2pteta_highMET.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+            self.h2_pre_l1l2pt_highMET.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+            self.h2_pre_l1l2eta_highMET.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+        else:
+            self.h1_pre_l1pt_lowMET.Fill(self.l1p4.Pt(),weight)
+            self.h1_pre_l1eta_lowMET.Fill(self.l1p4.Eta(),weight)
+            self.h1_pre_l2pt_lowMET.Fill(self.l2p4.Pt(),weight)
+            self.h1_pre_l2eta_lowMET.Fill(self.l2p4.Eta(),weight)
+            
+            self.h2_pre_l1pteta_lowMET.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+            self.h2_pre_l2pteta_lowMET.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+            self.h2_pre_l1l2pt_lowMET.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+            self.h2_pre_l1l2eta_lowMET.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+        
+        if({19}):
+            self.pass_lepmet_trigger.Fill(0.5,weight)
+            self.h1_l1pt.Fill(self.l1p4.Pt(),weight)
+            self.h1_l1eta.Fill(self.l1p4.Eta(),weight)
+            self.h1_l2pt.Fill(self.l2p4.Pt(),weight)
+            self.h1_l2eta.Fill(self.l2p4.Eta(),weight)
+            self.h1_njet.Fill(self.tree.n_tight_jet,weight)
+            self.h1_met.Fill(met,weight)
+            self.h2_l1pteta.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+            self.h2_l2pteta.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+            self.h2_l1l2pt.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+            self.h2_l1l2eta.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+            if self.tree.n_tight_jet > 3 :
+                self.h1_l1pt_highjet.Fill(self.l1p4.Pt(),weight)
+                self.h1_l1eta_highjet.Fill(self.l1p4.Eta(),weight)
+                self.h1_l2pt_highjet.Fill(self.l2p4.Pt(),weight)
+                self.h1_l2eta_highjet.Fill(self.l2p4.Eta(),weight)
 
-                    self.h2_l1pteta_highjet.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                    self.h2_l2pteta_highjet.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                    self.h2_l1l2pt_highjet.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                    self.h2_l1l2eta_highjet.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-                else:
-                    self.h1_l1pt_lowjet.Fill(self.l1p4.Pt(),weight)
-                    self.h1_l1eta_lowjet.Fill(self.l1p4.Eta(),weight)
-                    self.h1_l2pt_lowjet.Fill(self.l2p4.Pt(),weight)
-                    self.h1_l2eta_lowjet.Fill(self.l2p4.Eta(),weight)
-                    
-                    self.h2_l1pteta_lowjet.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                    self.h2_l2pteta_lowjet.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                    self.h2_l1l2pt_lowjet.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                    self.h2_l1l2eta_lowjet.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-                if (self.tree.PV_npvs) > 30:
-                    self.h1_l1pt_highpv.Fill(self.l1p4.Pt(),weight)
-                    self.h1_l1eta_highpv.Fill(self.l1p4.Eta(),weight)
-                    self.h1_l2pt_highpv.Fill(self.l2p4.Pt(),weight)
-                    self.h1_l2eta_highpv.Fill(self.l2p4.Eta(),weight)
-                    
-                    self.h2_l1pteta_highpv.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                    self.h2_l2pteta_highpv.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                    self.h2_l1l2pt_highpv.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                    self.h2_l1l2eta_highpv.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-                else:
-                    self.h1_l1pt_lowpv.Fill(self.l1p4.Pt(),weight)
-                    self.h1_l1eta_lowpv.Fill(self.l1p4.Eta(),weight)
-                    self.h1_l2pt_lowpv.Fill(self.l2p4.Pt(),weight)
-                    self.h1_l2eta_lowpv.Fill(self.l2p4.Eta(),weight)
-                    
-                    self.h2_l1pteta_lowpv.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                    self.h2_l2pteta_lowpv.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                    self.h2_l1l2pt_lowpv.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                    self.h2_l1l2eta_lowpv.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-                if met > 150:
-                    self.h1_l1pt_highMET.Fill(self.l1p4.Pt(),weight)
-                    self.h1_l1eta_highMET.Fill(self.l1p4.Eta(),weight)
-                    self.h1_l2pt_highMET.Fill(self.l2p4.Pt(),weight)
-                    self.h1_l2eta_highMET.Fill(self.l2p4.Eta(),weight)
-                  
-                    self.h2_l1pteta_highMET.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                    self.h2_l2pteta_highMET.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                    self.h2_l1l2pt_highMET.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                    self.h2_l1l2eta_highMET.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
-                else:
-                    self.h1_l1pt_lowMET.Fill(self.l1p4.Pt(),weight)
-                    self.h1_l1eta_lowMET.Fill(self.l1p4.Eta(),weight)
-                    self.h1_l2pt_lowMET.Fill(self.l2p4.Pt(),weight)
-                    self.h1_l2eta_lowMET.Fill(self.l2p4.Eta(),weight)
-                    
-                    self.h2_l1pteta_lowMET.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
-                    self.h2_l2pteta_lowMET.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
-                    self.h2_l1l2pt_lowMET.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
-                    self.h2_l1l2eta_lowMET.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+                self.h2_l1pteta_highjet.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+                self.h2_l2pteta_highjet.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+                self.h2_l1l2pt_highjet.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+                self.h2_l1l2eta_highjet.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+            else:
+                self.h1_l1pt_lowjet.Fill(self.l1p4.Pt(),weight)
+                self.h1_l1eta_lowjet.Fill(self.l1p4.Eta(),weight)
+                self.h1_l2pt_lowjet.Fill(self.l2p4.Pt(),weight)
+                self.h1_l2eta_lowjet.Fill(self.l2p4.Eta(),weight)
+                
+                self.h2_l1pteta_lowjet.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+                self.h2_l2pteta_lowjet.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+                self.h2_l1l2pt_lowjet.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+                self.h2_l1l2eta_lowjet.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+            if (self.tree.PV_npvs) > 30:
+                self.h1_l1pt_highpv.Fill(self.l1p4.Pt(),weight)
+                self.h1_l1eta_highpv.Fill(self.l1p4.Eta(),weight)
+                self.h1_l2pt_highpv.Fill(self.l2p4.Pt(),weight)
+                self.h1_l2eta_highpv.Fill(self.l2p4.Eta(),weight)
+                
+                self.h2_l1pteta_highpv.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+                self.h2_l2pteta_highpv.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+                self.h2_l1l2pt_highpv.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+                self.h2_l1l2eta_highpv.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+            else:
+                self.h1_l1pt_lowpv.Fill(self.l1p4.Pt(),weight)
+                self.h1_l1eta_lowpv.Fill(self.l1p4.Eta(),weight)
+                self.h1_l2pt_lowpv.Fill(self.l2p4.Pt(),weight)
+                self.h1_l2eta_lowpv.Fill(self.l2p4.Eta(),weight)
+                
+                self.h2_l1pteta_lowpv.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+                self.h2_l2pteta_lowpv.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+                self.h2_l1l2pt_lowpv.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+                self.h2_l1l2eta_lowpv.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+            if met > 150:
+                self.h1_l1pt_highMET.Fill(self.l1p4.Pt(),weight)
+                self.h1_l1eta_highMET.Fill(self.l1p4.Eta(),weight)
+                self.h1_l2pt_highMET.Fill(self.l2p4.Pt(),weight)
+                self.h1_l2eta_highMET.Fill(self.l2p4.Eta(),weight)
+              
+                self.h2_l1pteta_highMET.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+                self.h2_l2pteta_highMET.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+                self.h2_l1l2pt_highMET.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+                self.h2_l1l2eta_highMET.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
+            else:
+                self.h1_l1pt_lowMET.Fill(self.l1p4.Pt(),weight)
+                self.h1_l1eta_lowMET.Fill(self.l1p4.Eta(),weight)
+                self.h1_l2pt_lowMET.Fill(self.l2p4.Pt(),weight)
+                self.h1_l2eta_lowMET.Fill(self.l2p4.Eta(),weight)
+                
+                self.h2_l1pteta_lowMET.Fill(self.l1p4.Pt(),abs(self.l1p4.Eta()),weight)
+                self.h2_l2pteta_lowMET.Fill(self.l2p4.Pt(),abs(self.l2p4.Eta()),weight)
+                self.h2_l1l2pt_lowMET.Fill(self.l1p4.Pt(),self.l2p4.Pt(),weight)
+                self.h2_l1l2eta_lowMET.Fill(abs(self.l1p4.Eta()),abs(self.l2p4.Eta()),weight)
 
 #build efficiency for object
 for obj in ['njet','met']:
@@ -299,7 +300,7 @@ for obj,x in zip(['lep','met','lepmet'],[2,1,3]):
 
 alpha=(lepeff*meteff)/lepmeteff
 alphaerr= sqrt(lepeff_err*lepeff_err*meteff*meteff + lepeff*lepeff*meteff_err*meteff_err + lepeff*lepeff*meteff*meteff*lepmeteff_err*lepmeteff_err/(lepmeteff*lepmeteff))/lepmeteff
-#print('alpha: '+str(alpha)+'+-'+str(alphaerr))
+print('alpha: '+str(alpha)+'+-'+str(alphaerr))
 self.outfile.cd()
 
 #Histogram Write

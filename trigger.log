@@ -2,35 +2,86 @@ Processing /eos/user/m/melu/TTC_Nanov8_new/MET.root
 Input File: /eos/user/m/melu/TTC_Nanov8_new/MET.root, total events: 380592, Channel: em
 File: ./data/trigger_data/MET_em.root created.
 Prodcution Progress for ./data/trigger_data/MET_em.root :0.0%
-Processing /eos/user/m/melu/TTC_Nanov8_new/MET.root
-Input File: /eos/user/m/melu/TTC_Nanov8_new/MET.root, total events: 380592, Channel: mm
-File: ./data/trigger_data/MET_mm.root created.
-Prodcution Progress for ./data/trigger_data/MET_mm.root :0.0%
+Prodcution Progress for ./data/trigger_data/MET_em.root :39.410000000000004%
+Prodcution Progress for ./data/trigger_data/MET_em.root :78.82000000000001%
+Single Leption Observables Calculating...
+DiLeptions Observables Calculating...
+Calculating Trigger Efficiency ...
+lep trigger eff:0.973990480577307+-0.0009122272184323155
+met trigger eff:0.8292338400122832+-0.002110799649688855
+lepmet trigger eff:0.8088745585751573+-0.002203720048804647
+alpha: 0.9985057111540793+-0.0038386251145140337
 Processing /eos/user/m/melu/TTC_Nanov8_new/MET.root
 Input File: /eos/user/m/melu/TTC_Nanov8_new/MET.root, total events: 380592, Channel: ee
 File: ./data/trigger_data/MET_ee.root created.
 Prodcution Progress for ./data/trigger_data/MET_ee.root :0.0%
-Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root
-Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root, total events: 479484, Channel: em
-File: ./data/trigger_data/TTTo1L_em.root created.
-Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :0.0%
-Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root
-Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root, total events: 479484, Channel: mm
-File: ./data/trigger_data/TTTo1L_mm.root created.
-Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :0.0%
-Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root
-Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root, total events: 15635891, Channel: ee
-File: ./data/trigger_data/TTTo2L_ee.root created.
-Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :0.0%
-Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root
-Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root, total events: 15635891, Channel: em
-File: ./data/trigger_data/TTTo2L_em.root created.
-Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :0.0%
-Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root
-Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root, total events: 15635891, Channel: mm
-File: ./data/trigger_data/TTTo2L_mm.root created.
-Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :0.0%
+Prodcution Progress for ./data/trigger_data/MET_ee.root :39.410000000000004%
+Prodcution Progress for ./data/trigger_data/MET_ee.root :78.82000000000001%
+Single Leption Observables Calculating...
+DiLeptions Observables Calculating...
+Calculating Trigger Efficiency ...
+lep trigger eff:0.9683021732941065+-0.0018001475291112845
+met trigger eff:0.7349340419474234+-0.0043695674173075405
+lepmet trigger eff:0.7132011008826041+-0.0044736359481794
+alpha: 0.9978086533585577+-0.008820939467904942
+Processing /eos/user/m/melu/TTC_Nanov8_new/MET.root
+Input File: /eos/user/m/melu/TTC_Nanov8_new/MET.root, total events: 380592, Channel: mm
+File: ./data/trigger_data/MET_mm.root created.
+Prodcution Progress for ./data/trigger_data/MET_mm.root :0.0%
+Prodcution Progress for ./data/trigger_data/MET_mm.root :39.410000000000004%
+Prodcution Progress for ./data/trigger_data/MET_mm.root :78.82000000000001%
+Single Leption Observables Calculating...
+DiLeptions Observables Calculating...
+Calculating Trigger Efficiency ...
+lep trigger eff:0.976959473359391+-0.0010030858950942356
+met trigger eff:0.8269080436124254+-0.00246082751372112
+lepmet trigger eff:0.8078996091339231+-0.002560251692830584
+alpha: 0.9999455844152088+-0.00446664750577288
 Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root
 Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root, total events: 479484, Channel: ee
 File: ./data/trigger_data/TTTo1L_ee.root created.
 Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :0.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :31.28%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :62.57%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :93.85%
+Single Leption Observables Calculating...
+DiLeptions Observables Calculating...
+Calculating Trigger Efficiency ...
+lep trigger eff:0.912670476098334+-0.004026327839289437
+met trigger eff:0.24638302313269264+-0.006137560448727475
+lepmet trigger eff:0.22582449893095263+-0.005953665682571493
+alpha: 0.9957578211822619+-0.03638360119241793
+Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root
+Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root, total events: 479484, Channel: em
+File: ./data/trigger_data/TTTo1L_em.root created.
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :0.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :31.28%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :62.57%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :93.85%
+Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root
+Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root, total events: 479484, Channel: mm
+File: ./data/trigger_data/TTTo1L_mm.root created.
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :0.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :31.28%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :62.57%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :93.85%
+Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root
+Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root, total events: 15635891, Channel: ee
+File: ./data/trigger_data/TTTo2L_ee.root created.
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :0.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :0.96%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :1.92%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :2.88%
+Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root
+Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root, total events: 15635891, Channel: em
+File: ./data/trigger_data/TTTo2L_em.root created.
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :0.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :0.96%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :1.92%
+Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root
+Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root, total events: 15635891, Channel: mm
+File: ./data/trigger_data/TTTo2L_mm.root created.
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :0.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :0.96%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :1.92%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :2.88%

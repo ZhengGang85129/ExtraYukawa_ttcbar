@@ -33,7 +33,6 @@ class multithread:
         for thread,args in zip(self.thread_list,self.thread_args_list):
             p = th.Thread(target=thread,args=(args))
             p.start()
-            p.join()
 
 def calculate(arg):
     print(arg)
