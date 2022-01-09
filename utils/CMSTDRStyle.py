@@ -5,7 +5,6 @@ def setTDRStyle():
 
     tdrStyle.SetCanvasBorderMode(0)
     tdrStyle.SetCanvasColor(kWhite)
-
     tdrStyle.SetCanvasDefH(600) #Height of canvas
     tdrStyle.SetCanvasDefW(600) #Width of canvas
     tdrStyle.SetCanvasDefX(0)   #Position on screen
@@ -143,6 +142,5 @@ def setTDRStyle():
     ## tdrStyle->SetPalette(Int_t ncolors = 0, Int_t* colors = 0)
     ## tdrStyle->SetTimeOffset(Double_t toffset)
     ## tdrStyle->SetHistMinimumZero(kTRUE)
-
 
     return tdrStyle

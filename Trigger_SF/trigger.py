@@ -11,6 +11,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-s','--sources',help='path of nano file sources',type=str,default='/eos/user/m/melu/TTC_Nanov8_new')
 parser.add_argument('-m','--mode',help='Program Modes',choices=['Init','Prod','Plot'],type=str)
 
+
+
 args = parser.parse_args()
 
 if args.mode == 'Init':
@@ -18,4 +20,4 @@ if args.mode == 'Init':
 elif args.mode =='Prod':
     trig_tool.trigger_store(False,args.sources)
 elif args.mode == 'Plot':
-    print('Plot Hisogram')
+    trig_tool.trigger_plot(colors=[1,632])

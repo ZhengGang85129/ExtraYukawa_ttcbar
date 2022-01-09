@@ -85,6 +85,8 @@ self.pass_lep_trigger= TH1F('pass_lep_trigger','pass_lep_trigger',1,0,1)
 self.pass_met_trigger= TH1F('pass_met_trigger','pass_met_trigger',1,0,1)
 self.pass_lepmet_trigger= TH1F('pass_lepmet_trigger','pass_lepmet_trigger',1,0,1)
 
+if 'TT' in self.infilebasename:self.entries=1500000
+print(self.infilebasename)
 for ientry in range(0,self.entries):
     self.tree.GetEntry(ientry)
     if 'TT' in self.infilebasename:
@@ -294,8 +296,8 @@ for obv,condition,obj in product(['pt','eta'],['','_low','_high'],['','jet','pv'
     exec(cmd_str.h2_divide_2lepcommand.format(obv,condition,obj))
 
 ##Efficiency Calculating
-print('Calculating Trigger Efficiency ...')
-for obj,x in zip(['lep','met','lepmet'],[2,1,3]):
+print('Calculating Trigger Efficiency for '+self.outfilename+' ....')
+for obj,x in zip(['lep','met','lepmet'],[1,2,3]):
     exec(cmd_str.eff_for_trigcommand.format(obj,x))
 
 alpha=(lepeff*meteff)/lepmeteff

@@ -1,12 +1,13 @@
 Processing /eos/user/m/melu/TTC_Nanov8_new/MET.root
 Input File: /eos/user/m/melu/TTC_Nanov8_new/MET.root, total events: 380592, Channel: em
 File: ./data/trigger_data/MET_em.root created.
+MET.
 Prodcution Progress for ./data/trigger_data/MET_em.root :0.0%
 Prodcution Progress for ./data/trigger_data/MET_em.root :39.410000000000004%
 Prodcution Progress for ./data/trigger_data/MET_em.root :78.82000000000001%
 Single Leption Observables Calculating...
 DiLeptions Observables Calculating...
-Calculating Trigger Efficiency ...
+Calculating Trigger Efficiency for ./data/trigger_data/MET_em.root ....
 lep trigger eff:0.973990480577307+-0.0009122272184323155
 met trigger eff:0.8292338400122832+-0.002110799649688855
 lepmet trigger eff:0.8088745585751573+-0.002203720048804647
@@ -14,12 +15,13 @@ alpha: 0.9985057111540793+-0.0038386251145140337
 Processing /eos/user/m/melu/TTC_Nanov8_new/MET.root
 Input File: /eos/user/m/melu/TTC_Nanov8_new/MET.root, total events: 380592, Channel: ee
 File: ./data/trigger_data/MET_ee.root created.
+MET.
 Prodcution Progress for ./data/trigger_data/MET_ee.root :0.0%
 Prodcution Progress for ./data/trigger_data/MET_ee.root :39.410000000000004%
 Prodcution Progress for ./data/trigger_data/MET_ee.root :78.82000000000001%
 Single Leption Observables Calculating...
 DiLeptions Observables Calculating...
-Calculating Trigger Efficiency ...
+Calculating Trigger Efficiency for ./data/trigger_data/MET_ee.root ....
 lep trigger eff:0.9683021732941065+-0.0018001475291112845
 met trigger eff:0.7349340419474234+-0.0043695674173075405
 lepmet trigger eff:0.7132011008826041+-0.0044736359481794
@@ -27,12 +29,13 @@ alpha: 0.9978086533585577+-0.008820939467904942
 Processing /eos/user/m/melu/TTC_Nanov8_new/MET.root
 Input File: /eos/user/m/melu/TTC_Nanov8_new/MET.root, total events: 380592, Channel: mm
 File: ./data/trigger_data/MET_mm.root created.
+MET.
 Prodcution Progress for ./data/trigger_data/MET_mm.root :0.0%
 Prodcution Progress for ./data/trigger_data/MET_mm.root :39.410000000000004%
 Prodcution Progress for ./data/trigger_data/MET_mm.root :78.82000000000001%
 Single Leption Observables Calculating...
 DiLeptions Observables Calculating...
-Calculating Trigger Efficiency ...
+Calculating Trigger Efficiency for ./data/trigger_data/MET_mm.root ....
 lep trigger eff:0.976959473359391+-0.0010030858950942356
 met trigger eff:0.8269080436124254+-0.00246082751372112
 lepmet trigger eff:0.8078996091339231+-0.002560251692830584
@@ -40,13 +43,20 @@ alpha: 0.9999455844152088+-0.00446664750577288
 Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root
 Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root, total events: 479484, Channel: ee
 File: ./data/trigger_data/TTTo1L_ee.root created.
+TTTo1L.
 Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :0.0%
-Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :31.28%
-Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :62.57%
-Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :93.85%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :10.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :20.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :30.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :40.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :50.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :60.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :70.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :80.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_ee.root :90.0%
 Single Leption Observables Calculating...
 DiLeptions Observables Calculating...
-Calculating Trigger Efficiency ...
+Calculating Trigger Efficiency for ./data/trigger_data/TTTo1L_ee.root ....
 lep trigger eff:0.912670476098334+-0.004026327839289437
 met trigger eff:0.24638302313269264+-0.006137560448727475
 lepmet trigger eff:0.22582449893095263+-0.005953665682571493
@@ -54,34 +64,105 @@ alpha: 0.9957578211822619+-0.03638360119241793
 Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root
 Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root, total events: 479484, Channel: em
 File: ./data/trigger_data/TTTo1L_em.root created.
+TTTo1L.
 Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :0.0%
-Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :31.28%
-Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :62.57%
-Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :93.85%
-Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root
-Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root, total events: 479484, Channel: mm
-File: ./data/trigger_data/TTTo1L_mm.root created.
-Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :0.0%
-Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :31.28%
-Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :62.57%
-Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :93.85%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :10.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :20.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :30.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :40.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :50.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :60.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :70.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :80.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_em.root :90.0%
+Single Leption Observables Calculating...
+DiLeptions Observables Calculating...
+Calculating Trigger Efficiency for ./data/trigger_data/TTTo1L_em.root ....
+lep trigger eff:0.9251091442746454+-0.0014490944983295481
+met trigger eff:0.3730987261909839+-0.002654790615937012
+lepmet trigger eff:0.34736501985530854+-0.002613172392291704
+alpha: 0.9936436416662595+-0.010406128471593626
 Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root
 Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root, total events: 15635891, Channel: ee
 File: ./data/trigger_data/TTTo2L_ee.root created.
+TTTo2L.
 Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :0.0%
-Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :0.96%
-Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :1.92%
-Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :2.88%
-Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root
-Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root, total events: 15635891, Channel: em
-File: ./data/trigger_data/TTTo2L_em.root created.
-Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :0.0%
-Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :0.96%
-Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :1.92%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :10.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :20.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :30.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :40.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :50.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :60.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :70.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :80.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_ee.root :90.0%
+Single Leption Observables Calculating...
+DiLeptions Observables Calculating...
+Calculating Trigger Efficiency for ./data/trigger_data/TTTo2L_ee.root ....
+lep trigger eff:0.9804970836092719+-0.0005460687549173793
+met trigger eff:0.3477741353775089+-0.001882674386367354
+lepmet trigger eff:0.3417010605280778+-0.0018748837803827176
+alpha: 0.997923521119315+-0.007711975535610773
 Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root
 Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root, total events: 15635891, Channel: mm
 File: ./data/trigger_data/TTTo2L_mm.root created.
+TTTo2L.
 Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :0.0%
-Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :0.96%
-Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :1.92%
-Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :2.88%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :10.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :20.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :30.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :40.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :50.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :60.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :70.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :80.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_mm.root :90.0%
+Single Leption Observables Calculating...
+DiLeptions Observables Calculating...
+Calculating Trigger Efficiency for ./data/trigger_data/TTTo2L_mm.root ....
+lep trigger eff:0.9854787214804928+-0.000345101103773038
+met trigger eff:0.35001941126157454+-0.0013676281162001926
+lepmet trigger eff:0.34567232963031325+-0.0013635430739529894
+alpha: 0.9978718350766208+-0.00555139010229104
+Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root
+Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo2L.root, total events: 15635891, Channel: em
+File: ./data/trigger_data/TTTo2L_em.root created.
+TTTo2L.
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :0.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :10.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :20.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :30.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :40.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :50.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :60.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :70.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :80.0%
+Prodcution Progress for ./data/trigger_data/TTTo2L_em.root :90.0%
+Single Leption Observables Calculating...
+DiLeptions Observables Calculating...
+Calculating Trigger Efficiency for ./data/trigger_data/TTTo2L_em.root ....
+lep trigger eff:0.9790188360633956+-0.00034222738293906724
+met trigger eff:0.41789298809188385+-0.001175626389304344
+lepmet trigger eff:0.4111535993381134+-0.0011728193625441768
+alpha: 0.9950663388558233+-0.004001753997964567
+Processing /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root
+Input File: /eos/user/m/melu/TTC_Nanov8_new/TTTo1L.root, total events: 479484, Channel: mm
+File: ./data/trigger_data/TTTo1L_mm.root created.
+TTTo1L.
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :0.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :10.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :20.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :30.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :40.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :50.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :60.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :70.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :80.0%
+Prodcution Progress for ./data/trigger_data/TTTo1L_mm.root :90.0%
+Single Leption Observables Calculating...
+DiLeptions Observables Calculating...
+Calculating Trigger Efficiency for ./data/trigger_data/TTTo1L_mm.root ....
+lep trigger eff:0.9406080270254311+-0.0012273008711399655
+met trigger eff:0.5279424160755194+-0.002587994789807629
+lepmet trigger eff:0.5013980915139281+-0.0025909395072076314
+alpha: 0.9904043967707027+-0.007171705410031134
