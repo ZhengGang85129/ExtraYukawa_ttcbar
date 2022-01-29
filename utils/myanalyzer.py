@@ -111,6 +111,7 @@ class analyzer():
         \nself.Eff_{0}.SetTitle('Eff {0}')
         \nself.Eff_{0}.SetName('Eff_{0}')
         \nself.Eff_{0}.Write()
+        \nself.h1_{0}.Write()
         '''
         exec(command.format(name))
     def eff_2dsave(self,name:str):

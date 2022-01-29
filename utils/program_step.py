@@ -101,10 +101,10 @@ def Plot_efficiency(channels):
                 'eta':['l2eta','l2eta_highjet','l2eta_lowjet','l2eta_highpv','l2eta_lowpv','l2eta_highMET','l2eta_lowMET'],
                 'pteta':['l1pteta','l1pteta_highjet','l1pteta_lowjet','l1pteta_highpv','l1pteta_lowpv','l1pteta_highMET','l1pteta_lowMET']
             },
-            'l1l2':{
-                'pt':['l1l2pt','l1l2pt_highjet','l1l2pt_lowjet','l1l2pt_highpv','l1l2pt_lowpv','l1l2pt_highMET','l1l2pt_lowMET'],
-                'eta':['l1l2eta','l1l2eta_highjet','l1l2eta_lowjet','l1l2eta_highpv','l1l2eta_lowpv','l1l2eta_highMET','l1l2eta_lowMET']
-                }
+        #    'l1l2':{
+        #        'pt':['l1l2pt','l1l2pt_highjet','l1l2pt_lowjet','l1l2pt_highpv','l1l2pt_lowpv','l1l2pt_highMET','l1l2pt_lowMET'],
+        #        'eta':['l1l2eta','l1l2eta_highjet','l1l2eta_lowjet','l1l2eta_highpv','l1l2eta_lowpv','l1l2eta_highMET','l1l2eta_lowMET']
+        #        }
         }
 
     for channel in channels:
@@ -126,10 +126,10 @@ def Plot_efficiency(channels):
             Plot(plot_eff2d,**user_settings)(tag=tag)
         for tag in  tags['l2']['pteta']:
             Plot(plot_eff2d,**user_settings)(tag=tag)
-        for tag in  tags['l1l2']['pt']:
-            Plot(plot_eff2d,**user_settings)(tag=tag)
-        for tag in  tags['l1l2']['eta']:
-            Plot(plot_eff2d,**user_settings)(tag=tag)
+        #for tag in  tags['l1l2']['pt']:
+        #    Plot(plot_eff2d,**user_settings)(tag=tag)
+        #for tag in  tags['l1l2']['eta']:
+        #    Plot(plot_eff2d,**user_settings)(tag=tag)
 
 
 def Plot(func,**user_settings):
@@ -137,7 +137,7 @@ def Plot(func,**user_settings):
     'Type': user_settings.get('Type','NULL'),
     'colors' : user_settings.get('colors',[1,4]),
     'infiledir' : user_settings.get('infiledir','./data/trigger_data'),
-    'channel' :user_settings.get('channel','ee'),
+    'channel' :user_settings.get('channel'),
     'outfiledir'  : user_settings.get('outfilename','/eos/user/z/zhenggan/ttcbar/trigger_plot')
     }
     def decorator(tag):
@@ -156,13 +156,15 @@ def plot_eff1d(tag:str,**settings):
             infilenames.append(os.path.join(settings['infiledir'],file))
             data_names.append(file.split('.root')[0])
     for filename in infilenames:
+        print(filename)
         infiles.append(TFile.Open(filename))
     nfiles = len(infiles)
-    
     for idx ,infile in enumerate(infiles):
+        
         name, histogram = create_hist(infile,tag)
         histograms_list.append(histogram)
         data_names.append(name) 
+    
     TS = CMSTDRStyle.setTDRStyle()
     TS.cd()
     c = TCanvas()
@@ -199,8 +201,9 @@ def create_hist(infile:TFile,tag:str):
     '''
     A lazy function to get histogram in root file.
     '''
-    histotemp = TEfficiency()
-    histoname = 'pre_'+tag+'_clone'
+    histotemp = TH2D()
+    histoname = 'Eff_'+tag
+    print(histoname)
     histotemp = infile.Get(histoname)
     histotemp.SetNameTitle(tag,"")
     
@@ -227,7 +230,7 @@ def plot_eff2d(tag:str,**settings):
         c = TCanvas()
         pad = TPad()
         pad.Draw()
-        mypalette.colorPalette()
+        #mypalette.colorPalette()
         histo2d.Draw('COLZ TEXT E')
         CMSstyle.SetStyle(pad)
         c.SetGridx(False)
@@ -258,7 +261,8 @@ def SF_Calc(**user_settings):
     settings['Data'] = dict()
     settings['MC'] = dict()
     nominal_names =['l1pteta','l2pteta']
-    
+    print(settings['channel'])
+
     for file in os.listdir(settings['infiledir']):
         if fnmatch.fnmatch(file,'*_'+settings['channel']+'.root'):
             basename = file.split('_'+settings['channel']+'.root')[0]
@@ -298,7 +302,7 @@ def ScaleFactors(nominal_name:str,**settings):
     SF_Corr_SystUncertainty = Get_SystematicUncertainty('Correlation Type',nominal_name)(Correlation_Err_Calc,**args)
     SF_Diff_SystUncertainty = Get_SystematicUncertainty('Criteria Difference Type',nominal_name)(CriteriaDiff_Err_Calc,**args)
 
-    SF_SystematicUncertainty = np.sqrt((SF_Corr_SystUncertainty* SF_Central)**2+ (SF_Diff_SystUncertainty* SF_Central)**2)
+    SF_SystematicUncertainty = np.sqrt((SF_Corr_SystUncertainty * SF_Central)**2+ (SF_Diff_SystUncertainty* SF_Central)**2)
     
     
     SF_hist = TH2D(args['nominal_name'],args['nominal_name'],len(ptbin)-1,ptbin,len(etabin)-1,etabin)
@@ -315,6 +319,11 @@ def ScaleFactors(nominal_name:str,**settings):
             SF_hist.SetBinContent(i+1,j+1,SF_Central[i][j])
             SF_hist.SetBinError(i+1,j+1,SF_SystematicUncertainty[i][j])
 
+    
+    f = TFile.Open(os.path.join(settings['outfiledir'],'sf'+'_'+nominal_name+'_'+settings['channel']+'.root'),'recreate')
+    f.cd()
+    SF_hist.Write()
+    f.Close()
     TS = CMSTDRStyle.setTDRStyle()
     TS.cd()
     c = TCanvas()
@@ -329,11 +338,6 @@ def ScaleFactors(nominal_name:str,**settings):
     pad.SetRightMargin(0.15)
     c.Update()
     c.SaveAs(os.path.join(settings['outfiledir'],'sf'+'_'+nominal_name+'_'+settings['channel']+'.png'))
-    
-    f = TFile.Open(os.path.join(settings['outfiledir'],'sf'+'_'+nominal_name+'_'+settings['channel']+'.root'),'recreate')
-    f.cd()
-    SF_hist.Write()
-    f.Close()
     pad.Close()
     c.Close()
     del c 
@@ -341,7 +345,6 @@ def ScaleFactors(nominal_name:str,**settings):
     del pad
     del SF_hist
 
-    
 
 
 
@@ -376,10 +379,22 @@ def Correlation_Err_Calc(**args) -> np.ndarray:
     }
     
     hist2D =  Args['Data'].Get(Args['nominal_name'])
+    
+    mettrigger = TEfficiency()
+    leptrigger = TEfficiency()
+    lepmettrigger = TEfficiency()
+
+    print(Args['Data'])
+    mettrigger = Args['Data'].Get('Eff_mettrigger')
+    leptrigger = Args['Data'].Get('Eff_leptrigger')
+    lepmettrigger = Args['Data'].Get('Eff_lepmettrigger')
+    
+    alpha = mettrigger.GetEfficiency(1)*leptrigger.GetEfficiency(1)/lepmettrigger.GetEfficiency(1)
+
     err_array = np.zeros(shape=(hist2D.GetNbinsX(),hist2D.GetNbinsY()),dtype=np.float32)
     for i in range(hist2D.GetNbinsX()):
         for j in range(hist2D.GetNbinsY()):
-            err_array[i][j] = 0.0022
+            err_array[i][j] = 1 -alpha
     return err_array
 
 def CriteriaDiff_Err_Calc(**Args) -> np.ndarray:

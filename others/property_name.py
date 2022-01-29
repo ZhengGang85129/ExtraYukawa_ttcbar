@@ -28,6 +28,5 @@ def dump():
     for channel in channels:
         property_name[channel]['ttc_p4'] = {'l1':['ttc_l1_pt','ttc_l1_eta','ttc_l1_phi','ttc_l1_mass'],'l2':['ttc_l2_pt','ttc_l2_eta','ttc_l2_phi','ttc_l2_mass']}
 
-
-    with open('./others/property_name/name.json','wt') as f:
+    with open('./data/datalist/2017/name.json','wt') as f:
         json.dump(property_name, f)

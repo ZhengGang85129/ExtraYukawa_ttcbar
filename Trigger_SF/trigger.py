@@ -13,9 +13,9 @@ parser.add_argument('-m','--mode',help='Program Modes',choices=['Init','Trig_Cal
 
 
 #infilepatterns = ['MET.root','TTTo2L*.root','TTTo1L*.root']
-infilepatterns = ['MET.root']
+infilepatterns = ['MET.root','TTTo2L*.root']
 args = parser.parse_args()
-channels = ['ee']
+channels = ['DoubleElectron']
 
 if args.mode == 'Init':
     arguments = {
@@ -26,13 +26,14 @@ if args.mode == 'Init':
     step.create_structure(arguments)
 elif args.mode =='Trig_Calc':
 
-    channels = ['DoubleElectron']
     step.Trig_Calc(channels=channels)
 
 elif args.mode == 'Eff_Plot':
     step.Plot_efficiency(channels=channels)
 
 elif args.mode == 'SF_Calc':
-    step.SF_Calc()
+    settings = dict()
+    settings['channel'] = channels[0]
+    step.SF_Calc(**settings)
 else:
     pass
