@@ -5,19 +5,20 @@ import os
 CURRENT_WORKDIR = os.getcwd()
 sys.path.append(CURRENT_WORKDIR)
 from ROOT import TH2D,TFile
-from utils.DY_utils import Get_SF, Filter, dfHist,overunder_flowbin,Plot
+from utils.DY_utils import Define_Hists, overunder_flowbin,Plot, MyDataFrame, Filtering
 import utils.DY_utils as DY_utils
 from Drell_Yan.DY_HistogramSetting import HistSettings
-from multiprocessing import Queue, Process
-
+import multiprocessing
+from multiprocessing import Queue, Process, Manager, Pool
+from collections import OrderedDict
 
 def Analyzer(channel='DoubleElectron'):
-
-    ROOT.gInterpreter.Declare(Get_SF.format('DoubleElectron'))
+    ROOT.gInterpreter.Declare(Define_Hists.format(channel))
+    ROOT.ROOT.EnableImplicitMT(multiprocessing.cpu_count())
     NumberOfMCEvents = dict()
-    histos = dict()
-    histos['MC'] = dict()
-    histos['Data'] = dict()
+    histos = OrderedDict()
+    histos['MC'] = OrderedDict()
+    histos['Data'] = OrderedDict()
     data_name = list()
 
 
@@ -39,68 +40,50 @@ def Analyzer(channel='DoubleElectron'):
     numberOfEvents = Event['NumberOfEvents']
     lumi = Event['xs']['lumi']
     
+    dfs = OrderedDict()
+    dfs['MC'] = OrderedDict()
+    dfs['Data'] = OrderedDict()
    
-    #Filter For MC
+    for MC in Files_Paths['MC'].keys():
+        settings ={
+                'channel': channel,
+                'Data' : False,
+                'Trigger_Condition': Trigger['All'],
+                'weight' : lepton_weight,
+                'File_Paths' : Files_Paths['MC'][MC],
+                }
+        dfs['MC'][MC]= MyDataFrame(settings)
+    
+    
+    for dilepton_type in Trigger[channel].keys():
+        settings = {
+                'channel': channel,
+                'Trigger_Condition' : Trigger[channel][dilepton_type],
+                'weight' : None,
+                'Data': True,
+                'File_Paths' : Files_Paths['Data'][dilepton_type],
+                }
+        dfs['Data'][dilepton_type]= MyDataFrame(settings)
 
     for MC in Files_Paths['MC'].keys():
-        df = Filter(channel,Trigger_Condition = Trigger['All'],File_Paths = Files_Paths['MC'][MC], weight = lepton_weight , Data = False)
-        histos['MC'][MC] = dfHist(df,HistSettings,Data=False)
-
-    #dfs = dict()
-    #dfs['MC'] = dict()
-    #dfs['Data'] = dict()
-
-    #dfs['MC'] = { MC : Process( target = Filter , args = (channel,Trigger['All'],Files_Paths['MC'][MC], lepton_weight , False)) for MC in Files_Paths['MC'].keys()}
+        Filtering(dfs['MC'][MC],HistSettings)
     
-
-
-    #print(dfs['MC'])
-    #for p in dfs['MC'].keys():
-    #    dfs['MC'][p].start()
-    #for p in dfs['MC'].keys():
-    #    dfs['MC'][p].join()
-
-    #histos['MC'] = {MC : Process(target = dfHist, args = (dfs['MC'][MC], HistSettings, False)) for MC in Files_Paths['MC'].keys()}
-    
-    #for p in histos['MC'].keys():
-    #    histos['MC'][p].start()
-    #for p in histos['MC']:
-    #    histos['MC'][p].join()
-
-
-    
-
-    #Filter For Data
-    
-    #dfs['Data'] = {dilepton_type: Process(target = Filter, args = (channel, Trigger[channel][dilepton_type], Files_Paths['Data'][dilepton_type],None, True)) for dilepton_type in Trigger[channel].keys()}
-    
-    #for p in dfs['Data'].keys():
-    #    dfs['Data'][p].start()
-    #for p in dfs['Data'].keys():
-    #    dfs['Data'][p].join()
-
-    #histos['Data'] = {dilepton_type: Process(target = dfHist, args=(dfs['Data'][dilepton_type] ,HistSettings,True)) for dilepton_type in Trigger[channel].keys()}
-    
-    #for p in histos['Data'].keys():
-    #    histos['Data'][p].start()
-    #for p in histos['Data'].keys():
-    #    histos['Data'][p].join()
     for dilepton_type in Trigger[channel].keys():
-        df = Filter(channel, Trigger_Condition = Trigger[channel][dilepton_type], File_Paths= Files_Paths['Data'][dilepton_type],weight=None, Data=True)
-        histos['Data'][dilepton_type] = dfHist(df,HistSettings,Data=True)
-    
+        Filtering(dfs['Data'][ dilepton_type] , HistSettings)
+
+
     for histname in HistSettings.keys():
-        HistoGrams = dict()
-        HistoGrams['MC'] = dict()
-        Temps = dict()
-        Temps['Data'] = dict()
-        Temps['MC'] = dict()
-        for MC in histos['MC'].keys():
-            h = histos['MC'][MC][histname].GetValue()
+        HistoGrams = OrderedDict()
+        HistoGrams['MC'] = OrderedDict()
+        Temps = OrderedDict()
+        Temps['Data'] = OrderedDict()
+        Temps['MC'] = OrderedDict()
+        for MC in dfs['MC'].keys():
+            h = dfs['MC'][MC].Hists[histname].GetValue()
             h.Scale(cross_section[MC]/float(numberOfEvents[MC]))
             Temps['MC'][MC] = overunder_flowbin(h)
-        for idx ,Data in enumerate(histos['Data'].keys()):
-            h= histos['Data'][Data][histname].GetValue()
+        for idx ,Data in enumerate(dfs['Data'].keys()):
+            h= dfs['Data'][Data].Hists[histname].GetValue()
             h = overunder_flowbin(h)
             Temps['Data'][Data] = overunder_flowbin(h)
             if idx == 0:
@@ -141,4 +124,4 @@ def Analyzer(channel='DoubleElectron'):
         HistoGrams['MC']['TT'] = Temps['MC']['TTTo1L']
         HistoGrams['MC']['TT'].Add(Temps['MC']['TTTo2L'])
 
-        Plot(HistoGrams,x_name=histname ,lumi=lumi)
+        Plot(HistoGrams,x_name=histname ,lumi=lumi,channel=channel)

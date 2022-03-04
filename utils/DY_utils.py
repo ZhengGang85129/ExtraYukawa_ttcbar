@@ -9,93 +9,114 @@ from ROOT import kFALSE
 import numpy as np
 import math
 from math import sqrt
-
-Get_SF ='''
+from multiprocessing import Queue, Manager
+Define_Hists ='''
 #include "TH2D.h"
 #include "TFile.h"
-TFile *f_l1pteta_{0} = TFile::Open("/eos/user/z/zhenggan/ttcbar/SF_plot/sf_l1pteta_{0}.root");
-TH2D * h_l1pteta_{0} = (TH2D*) f_l1pteta_{0}->Get("l1pteta");
-TFile *f_l2pteta_{0} = TFile::Open("/eos/user/z/zhenggan/ttcbar/SF_plot/sf_l2pteta_{0}.root");
-TH2D * h_l2pteta_{0} = (TH2D*) f_l2pteta_{0}->Get("l2pteta");
-
-float trigger_sf(TH2D * h_l1pteta, TH2D * h_l2pteta, float l1_pt, float l2_pt, float l1_eta , float l2_eta){{
-
-    if (l1_pt >200){{
-        l1_pt = 199.;
-    }}
-    if (l2_pt >200){{
-        l2_pt = 199.;
-    }}
-    float sf_l1 = h_l1pteta->GetBinContent(h_l1pteta->FindBin(l1_pt,fabs(l1_eta)));
-    float sf_l2 = h_l2pteta->GetBinContent(h_l2pteta->FindBin(l2_pt,fabs(l2_eta)));
-
-    return sf_l1 * sf_l2;
-}}
+TFile *f_l1pteta_{0} = TFile::Open("/afs/cern.ch/user/m/melu/public/output.root");
+TH2D * h_l1pteta_{0} = (TH2D*) f_l1pteta_{0}->Get("EleIDDataEff");
+//TFile *f_l2pteta_{0} = TFile::Open("/afs/cern.ch/user/m/melu/public/output.root");
+//TH2D * h_l2pteta_{0} = (TH2D*) f_l1pteta_{0}->Get("EleIDDataEff");
 '''
 
-def get_NumberOfEvent(filename:str) -> int:
-    ftemp = ROOT.TFile.Open(filename)
-    htemp = ftemp.Get('nEventsGenWeighted')
-    return  htemp.GetBinContent(1)
-
-def Trigger(df:ROOT.RDataFrame,Trigger_condition:str) -> ROOT.RDataFrame.Filter:
-    '''
-    Trigger_conidtion -> Trigger For Leptons
-    return dataframe with triggered condition
-    '''
-    return df.Filter(Trigger_condition)
 
 
-def Filter(channel:str,Trigger_Condition:str,weight:dict,Data:bool,File_Paths=None)->ROOT.RDataFrame.Filter:
-    '''
-    channel -> DoubleElectron, DoubleMuon, ElectronMuon
-    Trigger_Condition -> Lepton Trigger
-    Data_Path -> Path to Data
-    weight -> Leadinging and Subleading Leptons' Scale Factors
-    return DataFrame passing trigger.
-    '''
-    if channel == 'DoubleElectron':
-        DY_region =3
-    elif channel == 'DoubleMuon':
-        DY_region =1
-    elif channel == 'ElectronMuon':
-        DY_region =2
-    else:
-        raise ValueError
-    
-    filters = 'DY_region=={0} && DY_z_mass > 60 && DY_z_mass<120 && (DY_l1_pt>30 || DY_l2_pt>30) && DY_drll>0.3'.format(DY_region)
 
-    if type(File_Paths) is list:
-        f_paths = ROOT.std.vector('string')()
-        for path in File_Paths:
-            f_paths.push_back(path)
-    else:
-        f_paths = File_Paths
-
-    df_tree = ROOT.RDataFrame('Events',f_paths)
-    if not Data:
-        df_tree = df_tree.Define('trigger_SF','trigger_sf(h_l1pteta_{0},h_l2pteta_{0},DY_l1_pt,DY_l2_pt,DY_l1_eta,DY_l2_eta)'.format(channel))    
-    
-        lepton_weight = '*'.join([ w + '[DY_l1_id]' for w in weight['l1'] ] +[w + '[DY_l2_id]' for w in weight['l2']])
-
-        df_tree = df_tree.Define('genweight','puWeight*PrefireWeight*{}*trigger_SF*genWeight/abs(genWeight)'.format(lepton_weight))
-
-    df_tree = df_tree.Filter(filters)
-    df_tree = Trigger(df_tree,Trigger_Condition)
-    return df_tree
-
-
-def dfHist(df:ROOT.RDataFrame.Filter,HistsSetting:dict(),Data:bool) -> dict:
-
-    Histos = dict()
-    for name in HistsSetting.keys():
-        setting = HistsSetting[name]
-        if Data:
-            Histos[name] = df.Histo1D((setting['name'],'',setting['nbins'],setting['lowedge'],setting['highedge']),setting['name'])
+class MyDataFrame(object):
+    def __init__(self,settings:dict) -> None:
+        '''
+        self._channel -> DoubleElectron, DoubleMuon, or ElectronMuon    
+        self._Trigger_Condition -> DiLeptons HLT conditions
+        self._weight -> Scale Factors for Dileptons
+        self._Data(bool) -> Input File(s) is(are) Data/MC
+        self._filters -> Offline triggers for Dileptons
+        self._File_Paths -> Paths for input Files
+        '''
+        self._channel = settings.get('channel')
+        if self._channel == 'DoubleElectron':
+            DY_region = 3 
+        elif self._channel == 'DoubleMuon':
+            DY_region = 1
+        elif self._channel == 'ElectronMuon':
+            DY_region = 2 
         else:
-            Histos[name] = df.Histo1D((setting['name'],'',setting['nbins'],setting['lowedge'],setting['highedge']),setting['name'],'genweight')
-    return Histos
+            raise ValueError(f'No such channel{self.__channel}')
+        
+        self._filters = 'DY_region=={0} && DY_z_mass > 60 && DY_z_mass<120 && (DY_l1_pt>30 || DY_l2_pt>30) && DY_drll>0.3'.format(DY_region)    
+        self._Data = bool()
+        self._df_tree = ROOT.RDataFrame
+        self._Hists = Manager().dict()
+        
+        self._Trigger_Condition = settings.get('Trigger_Condition')
+        self._weights = settings.get('weight')
+        self._Data = settings.get('Data')
+        File_Paths = settings.get('File_Paths')
+        
 
+        self._File_Paths = ROOT.std.vector('string')()
+        if type(File_Paths) is list :
+            for path in File_Paths:
+                self._File_Paths.push_back(path)
+        else:
+            self._File_Paths.push_back(File_Paths)
+    @property
+    def Tree(self) ->ROOT.RDataFrame.Filter:
+        return self._df_tree
+    @property
+    def Data(self) ->bool:
+        return self._Data
+    @property
+    def channel(self)->str:
+        return self._channel
+    @channel.setter
+    def channel(self,channel:str)->str:
+        self._channel = channel
+    @property
+    def Trigger_Condition(self)->str:
+        return self._Trigger_Condition
+    @property
+    def lepton_weights(self) -> dict:
+        return self._weights
+    @property
+    def File_Paths(self) ->ROOT.std.vector('string')():
+        return self._File_Paths
+    @property
+    def offline_trig(self) -> str:
+        return self._filters 
+    @Tree.setter
+    def Tree(self, Tree:ROOT.RDataFrame.Filter):
+        self._df_tree = Tree
+
+    @property
+    def Hists(self) ->dict():
+        return self._Hists
+
+    @Hists.setter
+    def Hists(self, Hists:dict):
+        self._Hists =Hists
+
+def Filtering(df:ROOT.RDataFrame,HistsSettings:dict):
+    
+    Tree= ROOT.RDataFrame('Events',df.File_Paths)
+    if not df.Data:
+        Tree = Tree.Define('trigger_SF','trigger_sf(h_l1pteta_{0},h_l1pteta_{0},DY_l1_pt,DY_l2_pt,DY_l1_eta,DY_l2_eta)'.format(df.channel))
+        lepton_weight = '*'.join([ w + '[DY_l1_id]' for w in df.lepton_weights['l1'] ] +[w + '[DY_l2_id]' for w in df.lepton_weights['l2']])
+        Tree = Tree.Define('genweight',f'puWeight*PrefireWeight*{lepton_weight}*trigger_SF*genWeight/abs(genWeight)')
+
+    Tree = Tree.Filter(df.offline_trig)
+    df.Tree = Trigger(Tree,df.Trigger_Condition)
+
+    Hists =dict()
+    for name in HistsSettings.keys():
+        setting = HistsSettings[name]
+        if df.Data is not None:
+            if df.Data :
+                Hists[name] = df.Tree.Histo1D((setting['name'],'',setting['nbins'],setting['lowedge'],setting['highedge']),setting['name'])
+            else:
+                Hists[name] = df.Tree.Histo1D((setting['name'],'',setting['nbins'],setting['lowedge'],setting['highedge']),setting['name'],'genweight')
+        else:
+            raise ValueError
+    df.Hists = Hists
 
 def overunder_flowbin(h=None):
     h.SetBinContent(1,h.GetBinContent(0)+h.GetBinContent(1))
@@ -130,8 +151,8 @@ def set_axis(histo,coordinate:str,title:str,is_energy:bool):
     else:
         axis.SetTitle(title)
 
-
-def Plot(Histo:dict, x_name:str, lumi=int,save_dir='/eos/user/z/zhenggan/ttcbar/DrellYan'):
+from collections import OrderedDict
+def Plot(Histo:OrderedDict, x_name:str, lumi=int,save_dir='/eos/user/z/zhenggan/ttcbar/DrellYan',channel='DoubleElectron'):
 
     Histo['MC']['DY'].SetFillColor(ROOT.kRed)
     Histo['MC']['WJets'].SetFillColor(ROOT.kBlue - 7)
@@ -150,12 +171,16 @@ def Plot(Histo:dict, x_name:str, lumi=int,save_dir='/eos/user/z/zhenggan/ttcbar/
     Histo['Data'].SetMarkerColor(1)
     Histo['Data'].SetLineWidth(1)
 
+    Yield =dict()
+    Yield['MC'] =dict()
+    for MC in Histo['MC'].keys():
+        Yield['MC'][MC] = round(Histo['MC'][MC].Integral(),1)
+    Yield['MC'] = OrderedDict(sorted(Yield['MC'].items(),key = lambda x: x[1],reverse=True))
+    Yield['Data'] = round(Histo['Data'].Integral(),1)
+
     h_stack = ROOT.THStack()
-    
 
-
-
-    for MC in  Histo['MC'].keys():
+    for MC in  Yield['MC'].keys():
         h_stack.Add(Histo['MC'][MC])
     
     Nbins = h_stack.GetStack().Last().GetNbinsX()
@@ -195,13 +220,6 @@ def Plot(Histo:dict, x_name:str, lumi=int,save_dir='/eos/user/z/zhenggan/ttcbar/
     gr = ROOT.TGraphAsymmErrors(len(x), np.array(x), np.array(y),np.array(xerror),np.array(xerror), np.array(yerror_d), np.array(yerror_u))
 
     
-    Yield =dict()
-    Yield['MC'] =dict()
-    
-    for MC in Histo['MC'].keys():
-        Yield['MC'][MC] = round(Histo['MC'][MC].Integral(),1)
-    
-    Yield['Data'] = round(Histo['Data'].Integral(),1)
 
     from  utils.CMSTDRStyle import setTDRStyle
     T = setTDRStyle()
@@ -287,23 +305,13 @@ def Plot(Histo:dict, x_name:str, lumi=int,save_dir='/eos/user/z/zhenggan/ttcbar/
     hData.Draw()
 
     c.Update()
-    c.SaveAs(save_dir+x_name+'.pdf')
-    c.SaveAs(save_dir+x_name+'.png')
+    c.SaveAs(os.path.join(save_dir,channel+x_name+'.pdf'))
+    c.SaveAs(os.path.join(save_dir,channel+x_name+'.png'))
     c.Close()
     #pad1.Close()
     #pad2.Close()
 
     del T
     del c
-
     del hData
-
     del hMC
-
-
-
-
-
-
-
-
