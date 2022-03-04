@@ -5,3 +5,6 @@
 *.log
 test.py
 .json
+./data/*
+./EventContent.cpp
+*__init__.py
