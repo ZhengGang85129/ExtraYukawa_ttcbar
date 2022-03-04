@@ -4,7 +4,7 @@ import os
 CURRENT_WORKDIR = os.getcwd()
 sys.path.append(CURRENT_WORKDIR)
 import argparse
-from utils.Build_Dir import Build_Dir
+from Utils.Build_Dir import Build_Dir
 parser = argparse.ArgumentParser()
 #parser.add_argument('-i','--Filein',help='Text File names which contain the information of input files, ex: ./data/year2018/ForEfficiency/InputPath.txt',type=str)
 parser.add_argument('-m','--mode',help='Program Modes',choices=['Init','BuildDir','TrigEff_Calc','TrigEff_Plot','TrigSF_Calc'],type=str)
@@ -24,8 +24,8 @@ args = parser.parse_args()
 if args.mode == 'Init':
     if args.year is None:
         raise ValueError('[year] should be specified, ex: python3 ./WorkFlow/main.py -y 2018')
-    from utils.init import *
-    from utils.general_tool import MakeDir
+    from Utils.Init import *
+    from Utils.General_Tool import MakeDir
     RootDIR = './'
     MakeDir('./','data') 
     RootDIR = os.path.join(RootDIR,'data')

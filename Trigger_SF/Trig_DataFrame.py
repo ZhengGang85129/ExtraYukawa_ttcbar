@@ -6,9 +6,8 @@ sys.path.append(CURRENT_WORKDIR)
 from ROOT import TH2D,TFile,TEfficiency
 from array import array
 
-from utils.RDataFrame import *
-from utils.general_tool import *
-from utils.Header import *
+from Utils.RDataFrame import *
+from Utils.General_tool import *
 import warnings
 class TrigRDataFrame(MyDataFrame):
     ptbin=array('d',[20, 40, 50, 65, 80, 100, 200])

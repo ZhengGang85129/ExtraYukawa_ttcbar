@@ -6,13 +6,12 @@ sys.path.append(CURRENT_WORKDIR)
 import ROOT
 from ROOT import TFile, TH1F, TH2D, TCanvas, TLegend, TPad, TEfficiency
 from array import array
-import utils.CMSTDRStyle as CMSTDRStyle
-import utils.CMSstyle as CMSstyle
-import utils.mypalette as mypalette
-import others.property_name as property_name
+import Utils.CMSTDRStyle as CMSTDRStyle
+import Utils.CMSstyle as CMSstyle
+import Utils.Mypalette as mypalette
 import json
 from Trigger_SF.Trig_DataFrame import *
-from utils.general_tool import *
+from Utils.General_Tool import *
 
 def Trig_Calc(year:str,channel:str,Type:str):
     if year is None:

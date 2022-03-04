@@ -4,8 +4,8 @@ import os
 CURRENT_WORKDIR = os.getcwd()
 sys.path.append(CURRENT_WORKDIR)
 from ROOT import TH2D,TFile
-import utils.DY_utils as utils
-import utils.DY_Analyzer as DY
+import Drell_Yan.DY_utils as utils
+import Drell_Yan.DY_Analyzer as DY
 import time
 
 Get_SF ='''

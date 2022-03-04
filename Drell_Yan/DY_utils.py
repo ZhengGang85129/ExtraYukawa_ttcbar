@@ -19,9 +19,6 @@ TH2D * h_l1pteta_{0} = (TH2D*) f_l1pteta_{0}->Get("EleIDDataEff");
 //TH2D * h_l2pteta_{0} = (TH2D*) f_l1pteta_{0}->Get("EleIDDataEff");
 '''
 
-
-
-
 class MyDataFrame(object):
     def __init__(self,settings:dict) -> None:
         '''
