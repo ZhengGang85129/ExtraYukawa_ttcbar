@@ -29,6 +29,8 @@ def Build_Dir(setting):
     DirParName = os.path.join(DirParName,'ExtraYukawa')
     MakeDir(Root = DirParName,ChildName = Task)
     DirParName = os.path.join(DirParName,Task)
+    MakeDir(Root = DirParName,ChildName = 'year'+YEAR)
+    DirParName = os.path.join(DirParName,'year'+YEAR)
     User = dict()
     User['DirOut'] = dict()
     for channel in Channels:

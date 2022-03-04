@@ -1,0 +1,109 @@
+{
+    "DoubleElectron": {
+        "region": 3,
+        "weight": {
+            "l1": "Electron_RECO_SF",
+            "l2": "Electron_RECO_SF"
+        },
+        "OPS_p4": {
+            "l1": [
+                "OPS_l1_pt",
+                "OPS_l1_eta",
+                "OPS_l1_phi",
+                "OPS_l1_mass"
+            ],
+            "l2": [
+                "OPS_l2_pt",
+                "OPS_l2_eta",
+                "OPS_l2_phi",
+                "OPS_l2_mass"
+            ]
+        },
+        "ttc_p4": {
+            "l1": [
+                "ttc_l1_pt",
+                "ttc_l1_eta",
+                "ttc_l1_phi",
+                "ttc_l1_mass"
+            ],
+            "l2": [
+                "ttc_l2_pt",
+                "ttc_l2_eta",
+                "ttc_l2_phi",
+                "ttc_l2_mass"
+            ]
+        }
+    },
+    "DoubleMuon": {
+        "region": 1,
+        "weight": {
+            "l1": null,
+            "l2": null
+        },
+        "OPS_p4": {
+            "l1": [
+                "OPS_l1_pt",
+                "OPS_l1_eta",
+                "OPS_l1_phi",
+                "OPS_l1_mass"
+            ],
+            "l2": [
+                "OPS_l2_pt",
+                "OPS_l2_eta",
+                "OPS_l2_phi",
+                "OPS_l2_mass"
+            ]
+        },
+        "ttc_p4": {
+            "l1": [
+                "ttc_l1_pt",
+                "ttc_l1_eta",
+                "ttc_l1_phi",
+                "ttc_l1_mass"
+            ],
+            "l2": [
+                "ttc_l2_pt",
+                "ttc_l2_eta",
+                "ttc_l2_phi",
+                "ttc_l2_mass"
+            ]
+        }
+    },
+    "ElectronMuon": {
+        "region": 2,
+        "weight": {
+            "l1": null,
+            "l2": [
+                "Electron_RECO_SF"
+            ]
+        },
+        "OPS_p4": {
+            "l1": [
+                "Muon_corrected_pt",
+                "Muon_eta",
+                "Muon_phi",
+                "Muon_mass"
+            ],
+            "l2": [
+                "Electron_pt",
+                "Electron_eta",
+                "Electron_phi",
+                "Electron_mass"
+            ]
+        },
+        "ttc_p4": {
+            "l1": [
+                "ttc_l1_pt",
+                "ttc_l1_eta",
+                "ttc_l1_phi",
+                "ttc_l1_mass"
+            ],
+            "l2": [
+                "ttc_l2_pt",
+                "ttc_l2_eta",
+                "ttc_l2_phi",
+                "ttc_l2_mass"
+            ]
+        }
+    }
+}

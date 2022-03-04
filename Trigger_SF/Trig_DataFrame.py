@@ -58,7 +58,7 @@ class TrigRDataFrame(MyDataFrame):
         
         self.__Histogram['1D']['HLT'] = dict()
         #print(self.__HLT_LEP)
-        #print(self.__Var_Name)
+        print(self.__Var_Name)
         #print(self.__flag)
     @property
     def FileOutName()->str:
@@ -144,12 +144,24 @@ class TrigRDataFrame(MyDataFrame):
             self.__Histogram[dim][tag][name].Write()
         else:
             raise ValueError('Dimension {dim} is not in the list.')
+    def Correct_VarName(self,name:list,process:str,tag:str)->list:
+        
+        corrected_name = []
+        if process == 'OPS':
+            for n in name: 
+                corrected_name.append(n+'[OPS_'+tag+'_id]')
+        
+        return corrected_name
+
     def Run(self):
         #ROOT.ROOT.EnableImplicitMT()
+        #df = ROOT.RDataFrame("Events",self.__FileIn_vecstr).Range(0,10000)
+        df = ROOT.RDataFrame("Events",self.__FileIn_vecstr)
         ROOT.gInterpreter.ProcessLine(f'#include "./include/{self.__Year}/Header{self.__channel}.h"')
         print(f'Header File: "./include/{self.__Year}/Header{self.__channel}.h" is loaded')
+        df_flag_trig = df.Filter(Trig_Cond(flag = self.__flag,joint = " || " ),"Flag Cut")
         
-        if self.__channel == 'DoubleElectron':
+        if self.__channel == 'DoubleElectron'  :
             RECOWeight_Mul_TTC = 'Electron_RECO_SF[ttc_l1_id]*Electron_RECO_SF[ttc_l2_id]'
             RECOWeight_Mul_OPS = 'Electron_RECO_SF[OPS_l1_id]*Electron_RECO_SF[OPS_l2_id]'
         elif self.__channel == 'DoubleMuon':
@@ -158,12 +170,10 @@ class TrigRDataFrame(MyDataFrame):
         elif self.__channel == 'ElectronMuon':
             RECOWeight_Mul_TTC = 'Electron_RECO_SF[ttc_l2_id]'
             RECOWeight_Mul_OPS = 'Electron_RECO_SF[OPS_l2_id]'
-        
-        df = ROOT.RDataFrame("Events",self.__FileIn_vecstr).Range(0,100)
-        #df = ROOT.RDataFrame("Events",self.__FileIn_vecstr)
+            self.__Var_Name["OPS_p4"]["l1"]  = self.Correct_VarName(name=self.__Var_Name["OPS_p4"]["l1"],process='OPS',tag='l1')
+            self.__Var_Name["OPS_p4"]["l2"]  = self.Correct_VarName(name=self.__Var_Name["OPS_p4"]["l2"],process='OPS',tag='l2')
          
-
-        df_flag_trig = df.Filter(Trig_Cond(flag = self.__flag,joint = " || " ),"Flag Cut")
+        
         df_region_trig = df_flag_trig\
                 .Filter('OPS_region == {0} || ttc_region == {0}'.format(self.__Var_Name["region"]))\
                 .Define("isData","bool tag ; if ({0} == 1) tag = true; else tag = false;std::cout<<'1'<<std::endl;return tag".format(self.__isData))\
@@ -190,13 +200,12 @@ class TrigRDataFrame(MyDataFrame):
                 .Define("weight","1.")
         else:
             MET = 'MET_T1Smear_pt'
-            print(f'puWeight*PrefireWeight*{RECOWeight_Mul_OPS}*IDsf')
             df_Offline_DileptonsCut = df_region_trig\
                 .Define("met",f"{MET}")\
                 .Filter('(l1p4+l2p4).M() >20 && l1p4.Pt() > 30 && l2p4.Pt() && l1p4.DeltaR(l2p4) > 0.3 && met >100','LeptonCut')\
                 .Define('no_HLT','0.5')\
                 .Define("weight",f"float w ; if (ttc_flag) w = puWeight*PrefireWeight*{RECOWeight_Mul_TTC}*IDsf;\
-                else w = puWeight*PrefireWeight*{RECOWeight_Mul_OPS}*IDsf;return w ")
+                else w = puWeight*PrefireWeight*IDsf*{RECOWeight_Mul_OPS};return w ")
         
         df_HLT_LEP = df_Offline_DileptonsCut\
                 .Filter(Trig_Cond(flag = self.__HLT_LEP,joint = " || " ),"HLT_LEP_Trig")\

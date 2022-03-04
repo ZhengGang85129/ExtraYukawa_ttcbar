@@ -210,7 +210,7 @@ def GenGoodFlag_File(year:str):
     '''
 
     Flags = ['Flag_goodVertices','Flag_globalSuperTightHalo2016Filter', 'Flag_HBHENoiseFilter', 'Flag_HBHENoiseIsoFilter', 'Flag_EcalDeadCellTriggerPrimitiveFilter', 'Flag_BadPFMuonFilter', 'Flag_eeBadScFilter', 'Flag_ecalBadCalibFilter']
-    with open('./data/year2018/configuration/flag.json','wt') as f :
+    with open(f'./data/year{year}/configuration/flag.json','wt') as f :
         json.dump(Flags,f,indent=4)
 
 

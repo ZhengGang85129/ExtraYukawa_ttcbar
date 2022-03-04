@@ -1,0 +1,9 @@
+{
+    "DirOut": {
+        "DoubleElectron": {
+            "files": "/eos/user/z/zhenggan/ExtraYukawa/TriggerSF/year2017/DoubleElectron/files",
+            "plots": "/eos/user/z/zhenggan/ExtraYukawa/TriggerSF/year2017/DoubleElectron/plots"
+        }
+    },
+    "UserName": "zhenggan"
+}

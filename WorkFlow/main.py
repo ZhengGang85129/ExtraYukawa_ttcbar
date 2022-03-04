@@ -9,7 +9,7 @@ parser = argparse.ArgumentParser()
 #parser.add_argument('-i','--Filein',help='Text File names which contain the information of input files, ex: ./data/year2018/ForEfficiency/InputPath.txt',type=str)
 parser.add_argument('-m','--mode',help='Program Modes',choices=['Init','BuildDir','TrigEff_Calc','TrigEff_Plot','TrigSF_Calc'],type=str)
 
-parser.add_argument('-y','--year',help='year',choices=['2018'],type=str)
+parser.add_argument('-y','--year',help='year',choices=['2017'],type=str)
 
 parser.add_argument('-c','--channels',help='Channels, ex: DoubleElectron DoubleMuon',nargs='+')
 parser.add_argument('-i','--channel',choices=['DoubleElectron','DoubleMuon','ElectronMuon'])

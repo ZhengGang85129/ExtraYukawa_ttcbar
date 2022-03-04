@@ -1,0 +1,20 @@
+{
+    "DoubleElectron": {
+        "path": "/afs/cern.ch/user/m/melu/public/output.root",
+        "name": "EleIDDataEff"
+    },
+    "DoubleMuon": {
+        "path": "/eos/user/t/tihsu/share/muonID_SF/2018UL/muonIdSF_2018UL.root",
+        "name": "muIDSF"
+    },
+    "ElectronMuon": {
+        "path": {
+            "Muon": "/eos/user/t/tihsu/share/muonID_SF/2018UL/muonIdSF_2018UL.root",
+            "Electron": "/afs/cern.ch/user/m/melu/public/output.root"
+        },
+        "name": {
+            "Muon": "muIDSF",
+            "Electron": "EleIDDataEff"
+        }
+    }
+}
