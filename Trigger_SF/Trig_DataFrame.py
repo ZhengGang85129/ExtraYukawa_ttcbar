@@ -7,7 +7,7 @@ from ROOT import TH2D,TFile,TEfficiency
 from array import array
 
 from Utils.RDataFrame import *
-from Utils.General_tool import *
+from Utils.General_Tool import *
 import warnings
 class TrigRDataFrame(MyDataFrame):
     ptbin=array('d',[20, 40, 50, 65, 80, 100, 200])

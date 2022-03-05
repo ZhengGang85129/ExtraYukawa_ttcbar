@@ -3,7 +3,7 @@ import os,json
 CURRENT_WORKDIR = os.getcwd()
 sys.path.append(CURRENT_WORKDIR)
 #import utils.listoutdata2txt as d2t
-from utils.general_tool import MakeDir
+from Utils.General_Tool import MakeDir
 
 
 def Build_Dir(setting):
@@ -46,18 +46,3 @@ def Build_Dir(setting):
     print(f'Your Out put file will store here: {PrivateFile}')
     with open(PrivateFile,'w') as f:
         json.dump(User,f,indent=4)
-
-
-    #Create txt file:"datalistname" in which to save paths of data/MC.
-    #datalistname = './data/datalist/triggerinput.txt'
-    #d2t.generatefile(datalistname,infilepatterns=infilepatterns,path_to_data=source)
-    
-    #Create HLT Trigger Json File.
-    #d2t.generate_HLT_path()
-
-    #Create names of property for leptons, ex: weights, p4.
-    #property_name.dump()
-
-
-
-

@@ -8,7 +8,7 @@ from ROOT import TFile, TH1F, TH2D, TCanvas, TLegend, TPad, TEfficiency
 from array import array
 import Utils.CMSTDRStyle as CMSTDRStyle
 import Utils.CMSstyle as CMSstyle
-import Utils.Mypalette as mypalette
+import Utils.mypalette as mypalette
 import json
 from Trigger_SF.Trig_DataFrame import *
 from Utils.General_Tool import *
