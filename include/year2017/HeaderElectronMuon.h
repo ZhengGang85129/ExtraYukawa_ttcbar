@@ -1,12 +1,13 @@
+#ifndef ElectronMuonIDSF_h
+#define ElectronMuonIDSF_h
+
 #include "TH2D.h"
 #include "TFile.h"
 
-
-TFile *f1 = TFile::Open("file:///eos/user/t/tihsu/share/muonID_SF/2018UL/muonIdSF_2018UL.root ");
+TFile *f1 = TFile::Open("file:///eos/user/t/tihsu/share/muonID_SF/2017UL/muonIdSF_2017UL.root");
 TH2D *h1 = (TH2D*) f1->Get("muIDSF");
 TFile *f2 = TFile::Open("file:///afs/cern.ch/user/m/melu/public/output.root");
 TH2D *h2 = (TH2D*) f2->Get("EleIDDataEff");
-
 
 
 float ID_SF(float l1_pt, float l2_pt, float l1_eta, float l2_eta){
@@ -17,3 +18,6 @@ float ID_SF(float l1_pt, float l2_pt, float l1_eta, float l2_eta){
     return sf_l1*sf_l2;
 }
 
+
+
+#endif

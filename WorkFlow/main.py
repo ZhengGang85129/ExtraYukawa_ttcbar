@@ -14,7 +14,7 @@ parser.add_argument('-i','--channel',choices=['DoubleElectron','DoubleMuon','Ele
 parser.add_argument('-o','--DirOut',help="Output Directory's Parent,ex: /eos/user/z/zhenggan",type=str)
 parser.add_argument('-t','--task',help="Task",type=str,choices=["TriggerSF","DY_Reconstruction"])
 parser.add_argument('-f','--Type',help="MC/Data",type=str,choices=["MC","Data"])
-
+parser.add_argument('-n','--nevents',help="Number of Events. Only used in mode[TrigEff_Calc] at this moment. Default is set to -1.",type=int,default=-1)
 
 args = parser.parse_args()
 
@@ -51,7 +51,7 @@ elif args.mode == 'TrigEff_Calc':
     if args.Type == None:
         raise ValueError("Should Specify the type of input file(s)")
 
-    Trig_Calc(year = args.year , channel = args.channel, Type = args.Type)
+    Trig_Calc(year = args.year , channel = args.channel, Type = args.Type,nevents=args.nevents)
 elif args.mode == 'TrigEff_Plot':
     from Trigger_SF.Program_Step import * 
     if args.channel == 'None':
