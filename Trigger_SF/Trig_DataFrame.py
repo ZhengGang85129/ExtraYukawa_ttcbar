@@ -9,12 +9,10 @@ from array import array
 from Utils.RDataFrame import *
 from Utils.General_Tool import *
 import warnings
+import Utils.plot_settings as plt_set
+
+
 class TrigRDataFrame(MyDataFrame):
-    ptbin=array('d',[20, 40, 50, 65, 80, 100, 200])
-    etabin=array('d',[-2.5,-2.1,-1.8,-1.5,-1.2,-0.9,-0.6,-0.3,-0.1,0.1,0.3,0.6,0.9,1.2,1.5,1.8,2.1,2.5])
-    njetbin=array('d',[0,1,2,3,4,5,6,7,8,9,10])
-    metbin=array('d',[100,110,120,130,140,160,180,200,250])
-    abs_etabin=array('d',[0,0.4,0.9,1.5,2.5])
     def __init__(self,settings:dict)->None:
         super().__init__(settings)
         self.__Var_Name = settings.get('Var_Name',None)
@@ -30,6 +28,7 @@ class TrigRDataFrame(MyDataFrame):
         self.__channel = settings.get('channel',None)
         self.__FileOutName = self.__DirOut+'/EfficiencyFor'+self.__Type+'.root'
         self.__FileIn = settings.get('FileIn',None)
+        self.__nEvents = settings.get('nevents',None)
         self.__FileOut = TFile.Open(self.__FileOutName,"RECREATE")
        
         self.__FileIn_vecstr= ROOT.std.vector('string')()
@@ -57,7 +56,7 @@ class TrigRDataFrame(MyDataFrame):
         
         self.__Histogram['1D']['HLT'] = dict()
         #print(self.__HLT_LEP)
-        print(self.__Var_Name)
+        #print(self.__Var_Name)
         #print(self.__flag)
     @property
     def FileOutName()->str:
@@ -87,13 +86,13 @@ class TrigRDataFrame(MyDataFrame):
             warnings.warn('Should Speicify ytitle!')
         if dim == '1D':
             if tag == 'pt':
-                xbin = self.ptbin
+                xbin = plt_set.ptbin
             elif tag == 'eta':
-                xbin = self.etabin
+                xbin = plt_set.etabin
             elif tag == 'njet':
-                xbin = self.njetbin
+                xbin = plt_set.njetbin
             elif tag == 'met':
-                xbin = self.metbin
+                xbin = plt_set.metbin
             else:
                 raise ValueError(f'Tag{f} is not in the list.')
             nxbin = len(xbin) -1 
@@ -103,14 +102,14 @@ class TrigRDataFrame(MyDataFrame):
 
         if dim == '2D':
             if tag == 'pt':
-                xbin = self.ptbin
+                xbin = plt_set.ptbin
                 ybin = self.ptbin
             elif tag == 'eta':
-                xbin = self.abs_etabin
-                ybin = self.abs_etabin
+                xbin = plt_set.abs_etabin
+                ybin = plt_set.abs_etabin
             elif tag == 'pteta':
-                xbin = self.ptbin
-                ybin = self.abs_etabin
+                xbin = plt_set.ptbin
+                ybin = plt_set.abs_etabin
             else:
                 raise ValueError(f'Tag{tag} is not in the list.')
             nxbin = len(xbin) -1 
@@ -154,23 +153,42 @@ class TrigRDataFrame(MyDataFrame):
 
     def Run(self):
         #ROOT.ROOT.EnableImplicitMT()
+        if self.__nEvents == -1:
+            df = ROOT.RDataFrame("Events",self.__FileIn_vecstr)
+        else:
+            df = ROOT.RDataFrame("Events",self.__FileIn_vecstr).Range(0,self.__nEvents)
+
         #df = ROOT.RDataFrame("Events",self.__FileIn_vecstr).Range(0,10000)
-        df = ROOT.RDataFrame("Events",self.__FileIn_vecstr)
-        ROOT.gInterpreter.ProcessLine(f'#include "./include/{self.__Year}/Header{self.__channel}.h"')
-        print(f'Header File: "./include/{self.__Year}/Header{self.__channel}.h" is loaded')
+        #ROOT.gInterpreter.ProcessLine(f'#include "./include/{self.__Year}/Header{self.__channel}.h"')
+        #ROOT.gInterpreter.AddIncludePath('include')
+        ROOT.gInterpreter.ProcessLine('#include "./include/IDScaleFactor.h"')
+        ROOT.gSystem.Load(f'./myLib/myLib.so')
+        #print(f'Header File: "./include/{self.__Year}/Header{self.__channel}.h" is loaded')
         df_flag_trig = df.Filter(Trig_Cond(flag = self.__flag,joint = " || " ),"Flag Cut")
         
-        if self.__channel == 'DoubleElectron'  :
-            RECOWeight_Mul_TTC = 'Electron_RECO_SF[ttc_l1_id]*Electron_RECO_SF[ttc_l2_id]'
-            RECOWeight_Mul_OPS = 'Electron_RECO_SF[OPS_l1_id]*Electron_RECO_SF[OPS_l2_id]'
-        elif self.__channel == 'DoubleMuon':
-            RECOWeight_Mul_TTC = '1.'
-            RECOWeight_Mul_OPS = '1.'
-        elif self.__channel == 'ElectronMuon':
+        
+        if self.__channel == 'ElectronMuon': 
             RECOWeight_Mul_TTC = 'Electron_RECO_SF[ttc_l2_id]'
             RECOWeight_Mul_OPS = 'Electron_RECO_SF[OPS_l2_id]'
             self.__Var_Name["OPS_p4"]["l1"]  = self.Correct_VarName(name=self.__Var_Name["OPS_p4"]["l1"],process='OPS',tag='l1')
             self.__Var_Name["OPS_p4"]["l2"]  = self.Correct_VarName(name=self.__Var_Name["OPS_p4"]["l2"],process='OPS',tag='l2')
+            l1_IDSF_type = self.__LepSF_File['name']['Muon']
+            l1_IDSF_File = self.__LepSF_File['path']['Muon']
+            
+            l2_IDSF_type = self.__LepSF_File['name']['Electron']
+            l2_IDSF_File = self.__LepSF_File['path']['Electron']
+        else:
+            l1_IDSF_type = self.__LepSF_File['name']
+            l1_IDSF_File = self.__LepSF_File['path']
+            
+            l2_IDSF_type = l1_IDSF_type 
+            l2_IDSF_File = ""
+            if self.__channel == 'DoubleElectron'  :
+                RECOWeight_Mul_TTC = 'Electron_RECO_SF[ttc_l1_id]*Electron_RECO_SF[ttc_l2_id]'
+                RECOWeight_Mul_OPS = 'Electron_RECO_SF[OPS_l1_id]*Electron_RECO_SF[OPS_l2_id]'
+            elif self.__channel == 'DoubleMuon':
+                RECOWeight_Mul_TTC = '1.'
+                RECOWeight_Mul_OPS = '1.'
          
         
         df_region_trig = df_flag_trig\
@@ -182,13 +200,14 @@ class TrigRDataFrame(MyDataFrame):
                 .format(self.__Var_Name["region"],*self.__Var_Name["ttc_p4"]["l1"],*self.__Var_Name["OPS_p4"]["l1"]))\
                 .Define("l2p4","TLorentzVector k4; if(ttc_region == {0}) k4.SetPtEtaPhiM({1},{2},{3},{4}) ;else k4.SetPtEtaPhiM({5},{6},{7},{8});return k4"\
                 .format(self.__Var_Name["region"],*self.__Var_Name["ttc_p4"]["l2"],*self.__Var_Name["OPS_p4"]["l2"]))\
-                .Define("IDsf","ID_SF(l1p4.Pt(),l2p4.Pt(),l1p4.Eta(),l2p4.Eta())")\
                 .Define("l1pt","l1p4.Pt()")\
                 .Define("l2pt","l2p4.Pt()")\
                 .Define("l1eta","l1p4.Eta()")\
                 .Define("l2eta","l2p4.Eta()")\
                 .Define("l1_abseta","abs(l1p4.Eta())")\
-                .Define("l2_abseta","abs(l2p4.Eta())")
+                .Define("l2_abseta","abs(l2p4.Eta())")\
+                .Define("IDsf",f'IDScaleFact("{self._channel}","{l1_IDSF_File}","{l2_IDSF_File}","{l1_IDSF_type}","{l2_IDSF_type}",l1pt,l2pt,l1eta,l2eta)')
+                #.Define("IDsf","ID_SF(l1p4.Pt(),l2p4.Pt(),l1p4.Eta(),l2p4.Eta())")
         
         if self.__Type=='Data':
             MET = 'MET_T1_pt'
@@ -249,6 +268,11 @@ class TrigRDataFrame(MyDataFrame):
         weight_lep = df_HLT_LEP.Sum("weight")
         weight_met = df_HLT_MET.Sum("weight")
         weight_lepmet = df_HLT_LEPMET.Sum("weight")
+        print(f'weight_all:{weight_all.GetValue()}')
+        print(f'weight_lep:{weight_lep.GetValue()}')
+        print(f'weight_met:{weight_met.GetValue()}')
+        print(f'weight_lepmet:{weight_lepmet.GetValue()}')
+        print(f'IDSF:{df_Offline_DileptonsCut.Sum("IDsf").GetValue()}')
         eff_lep =weight_lep.GetValue()/weight_all.GetValue()
         eff_met = weight_met.GetValue()/weight_all.GetValue()
         eff_lepmet= weight_lepmet.GetValue()/weight_all.GetValue()
@@ -258,11 +282,12 @@ class TrigRDataFrame(MyDataFrame):
         print("#Events Pass HLT_LEP Cut: {0}".format(df_HLT_LEP.Count().GetValue()))
         print("#Events Pass HLT_MET Cut: {0}".format(df_HLT_MET.Count().GetValue()))
         print("#Events Pass HLT_LEPMET Cut: {0}".format(df_HLT_LEPMET.Count().GetValue()))
+        
         print(f"Efficiency for HLT_LEP: {eff_lep}")
         print(f"Efficiency for HLT_MET: {eff_met}")
         print(f"Efficiency for HLT_LEPMET: {eff_lepmet}")
         print(f"Correlation: {eff_lep*eff_met/eff_lepmet}")
-
+        
         self.__Histogram['1D']['HLT']['No_HLT'] = df_Offline_DileptonsCut.Histo1D(("No_HLT","No_HLT",1,0,1),"no_HLT","weight").GetValue()
         self.__Histogram['1D']['HLT']['HLT_LEP'] = df_HLT_LEP.Histo1D(("HLT_LEP_pass","HLT_LEP_pass",1,0,1),"HLT_LEP_pass","weight").GetValue()
         self.__Histogram['1D']['HLT']['HLT_MET'] = df_HLT_MET.Histo1D(("HLT_MET_pass","HLT_MET_pass",1,0,1),"HLT_MET_pass","weight").GetValue()

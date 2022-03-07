@@ -2,7 +2,7 @@
 #include "TFile.h"
 
 
-TFile *f = TFile::Open("file:///afs/cern.ch/user/m/melu/public/output.root");
+TFile *f = TFile::Open("file:///eos/user/t/tihsu/share/muonID_SF/2017UL/muonIdSF_2017UL.root");
 TH2D *h = (TH2D*) f->Get("muIDSF");
 
 
