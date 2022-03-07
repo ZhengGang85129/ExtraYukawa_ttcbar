@@ -21,7 +21,7 @@ args = parser.parse_args()
 
 if args.mode == 'Init':
     if args.year is None:
-        raise ValueError('[year] should be specified, ex: python3 ./WorkFlow/main.py -y 2018')
+        raise ValueError('You need to specify ex:[-y/--year 2017]')
     from Utils.Init import *
     from Utils.General_Tool import MakeDir
     RootDIR = './'
@@ -47,17 +47,17 @@ elif args.mode == 'BuildDir':
 elif args.mode == 'TrigEff_Calc':
     from Trigger_SF.Program_Step import * 
     if args.channel == None:
-        raise ValueError("Channel should be specified or The Specified Channel is Not in the list.")
+        raise ValueError("Channel should be specified or The Specified Channel is Not in the list. ex:[-i/--channel DoubleElectron]")
     if args.Type == None:
-        raise ValueError("Should Specify the type of input file(s)")
+        raise ValueError("Should Specify the type of input file(s) ex:[-f/--Type MC]")
 
     Trig_Calc(year = args.year , channel = args.channel, Type = args.Type,nevents=args.nevents)
 elif args.mode == 'TrigEff_Plot':
     from Trigger_SF.Program_Step import * 
     if args.channel == 'None':
-        raise ValueError('You need to specify [channel]')
+        raise ValueError("Channel should be specified or The Specified Channel is Not in the list. ex:[-i/--channel DoubleElectron]")
     if args.year == 'None':
-        raise ValueError('You need to specify [year]')
+        raise ValueError('You need to specify ex:[-y/--year 2017]')
     
     Plot_efficiency(channel=args.channel,year=args.year)
 
@@ -65,9 +65,9 @@ elif args.mode == 'TrigEff_Plot':
 elif args.mode == 'TrigSF_Calc':
     from Trigger_SF.Program_Step import * 
     if args.channel == 'None':
-        raise ValueError('You need to specify [channel]')
+        raise ValueError("Channel should be specified or The Specified Channel is Not in the list. ex:[-i/--channel DoubleElectron]")
     if args.year == 'None':
-        raise ValueError('You need to specify [year]')
+        raise ValueError('You need to specify ex:[-y/--year 2017]')
         
     SF_Calc(channel=args.channel,year=args.year)
 else:

@@ -10,7 +10,7 @@ from Utils.RDataFrame import *
 from Utils.General_Tool import *
 import warnings
 import Utils.plot_settings as plt_set
-
+from Utils.Header import Histogram_Definition
 
 class TrigRDataFrame(MyDataFrame):
     def __init__(self,settings:dict)->None:
@@ -103,7 +103,7 @@ class TrigRDataFrame(MyDataFrame):
         if dim == '2D':
             if tag == 'pt':
                 xbin = plt_set.ptbin
-                ybin = self.ptbin
+                ybin = plt_set.ptbin
             elif tag == 'eta':
                 xbin = plt_set.abs_etabin
                 ybin = plt_set.abs_etabin
@@ -177,12 +177,14 @@ class TrigRDataFrame(MyDataFrame):
             
             l2_IDSF_type = self.__LepSF_File['name']['Electron']
             l2_IDSF_File = self.__LepSF_File['path']['Electron']
+            ROOT.gInterpreter.ProcessLine(Histogram_Definition['Diff_Type'].format(l1_IDSF_File,l2_IDSF_File,l1_IDSF_type,l2_IDSF_type))
         else:
             l1_IDSF_type = self.__LepSF_File['name']
             l1_IDSF_File = self.__LepSF_File['path']
             
             l2_IDSF_type = l1_IDSF_type 
             l2_IDSF_File = ""
+            ROOT.gInterpreter.ProcessLine(Histogram_Definition['Same_Type'].format(l1_IDSF_File,l1_IDSF_type))
             if self.__channel == 'DoubleElectron'  :
                 RECOWeight_Mul_TTC = 'Electron_RECO_SF[ttc_l1_id]*Electron_RECO_SF[ttc_l2_id]'
                 RECOWeight_Mul_OPS = 'Electron_RECO_SF[OPS_l1_id]*Electron_RECO_SF[OPS_l2_id]'
@@ -206,7 +208,7 @@ class TrigRDataFrame(MyDataFrame):
                 .Define("l2eta","l2p4.Eta()")\
                 .Define("l1_abseta","abs(l1p4.Eta())")\
                 .Define("l2_abseta","abs(l2p4.Eta())")\
-                .Define("IDsf",f'IDScaleFact("{self._channel}","{l1_IDSF_File}","{l2_IDSF_File}","{l1_IDSF_type}","{l2_IDSF_type}",l1pt,l2pt,l1eta,l2eta)')
+                .Define("IDsf",f'IDScaleFact("{self._channel}",h1,h2,l1pt,l2pt,l1eta,l2eta)')
                 #.Define("IDsf","ID_SF(l1p4.Pt(),l2p4.Pt(),l1p4.Eta(),l2p4.Eta())")
         
         if self.__Type=='Data':
@@ -272,7 +274,7 @@ class TrigRDataFrame(MyDataFrame):
         print(f'weight_lep:{weight_lep.GetValue()}')
         print(f'weight_met:{weight_met.GetValue()}')
         print(f'weight_lepmet:{weight_lepmet.GetValue()}')
-        print(f'IDSF:{df_Offline_DileptonsCut.Sum("IDsf").GetValue()}')
+        #print(f'IDSF:{df_Offline_DileptonsCut.Sum("IDsf").GetValue()}')
         eff_lep =weight_lep.GetValue()/weight_all.GetValue()
         eff_met = weight_met.GetValue()/weight_all.GetValue()
         eff_lepmet= weight_lepmet.GetValue()/weight_all.GetValue()
@@ -287,7 +289,6 @@ class TrigRDataFrame(MyDataFrame):
         print(f"Efficiency for HLT_MET: {eff_met}")
         print(f"Efficiency for HLT_LEPMET: {eff_lepmet}")
         print(f"Correlation: {eff_lep*eff_met/eff_lepmet}")
-        
         self.__Histogram['1D']['HLT']['No_HLT'] = df_Offline_DileptonsCut.Histo1D(("No_HLT","No_HLT",1,0,1),"no_HLT","weight").GetValue()
         self.__Histogram['1D']['HLT']['HLT_LEP'] = df_HLT_LEP.Histo1D(("HLT_LEP_pass","HLT_LEP_pass",1,0,1),"HLT_LEP_pass","weight").GetValue()
         self.__Histogram['1D']['HLT']['HLT_MET'] = df_HLT_MET.Histo1D(("HLT_MET_pass","HLT_MET_pass",1,0,1),"HLT_MET_pass","weight").GetValue()
