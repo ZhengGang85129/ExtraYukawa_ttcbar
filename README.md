@@ -6,8 +6,8 @@ The structure of the code is simply derived from [TTC_plots](https://github.com/
 
 #step1: 
 ```
-$ mkdir ExtraYukawa_ttcbar
-$ cd ExtraYukawa_ttcbar
+$ mkdir TriggerScaleFactor
+$ cd TriggerScaleFactor
 % git clone https://github.com/ZhengGang85129/ExtraYukawa_ttcbar.git
 ```
 
