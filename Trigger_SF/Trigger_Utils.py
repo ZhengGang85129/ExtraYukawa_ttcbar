@@ -21,7 +21,7 @@ def Hist2D_to_Binx_Equal(h_original:ROOT.TH2D)->ROOT.TH2D:
     xmin = h_original.GetXaxis().GetXmin()
     ymin = h_original.GetYaxis().GetXmin()
     xtitle = h_original.GetXaxis().GetTitle()
-    ytitle = h_original.GetXaxis().GetTitle()
+    ytitle = h_original.GetYaxis().GetTitle()
     
     h_new = ROOT.TH2D("new_h","",nx,xmin,xmax,ny,ymin,ymax)
 

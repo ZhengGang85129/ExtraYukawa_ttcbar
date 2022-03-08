@@ -120,7 +120,7 @@ def GenLeptonIDSF_File(year:str):
                         'name':'EleIDDataEff'},
                 'DoubleMuon':{
                     'path':'/eos/user/t/tihsu/share/muonID_SF/2017UL/muonIdSF_2017UL.root',
-                    'name':'muIDSF'
+                    'name':'muIdSF'
                     },
                 'ElectronMuon':{
                     'path':{
@@ -128,7 +128,7 @@ def GenLeptonIDSF_File(year:str):
                         'Electron':'/afs/cern.ch/user/m/melu/public/output.root'
                     },
                     'name':{
-                        'Muon':'muIDSF',
+                        'Muon':'muIdSF',
                         'Electron':'EleIDDataEff'
                         }
 
