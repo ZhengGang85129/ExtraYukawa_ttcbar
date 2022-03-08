@@ -29,7 +29,6 @@ class TrigRDataFrame(MyDataFrame):
         self.__FileOutName = self.__DirOut+'/EfficiencyFor'+self.__Type+'.root'
         self.__FileIn = settings.get('FileIn',None)
         self.__nEvents = settings.get('nevents',None)
-        self.__FileOut = TFile.Open(self.__FileOutName,"RECREATE")
        
         self.__FileIn_vecstr= ROOT.std.vector('string')()
 
@@ -40,7 +39,6 @@ class TrigRDataFrame(MyDataFrame):
             self.__isData = 1
         else:
             self.__isData = 0 
-        print(self.__FileOutName +' is created.')
         self.__Histogram = dict()
         self.__Histogram['1D'] = dict()
         self.__Histogram['1D']['pt'] = dict()
@@ -156,13 +154,17 @@ class TrigRDataFrame(MyDataFrame):
         if self.__nEvents == -1:
             df = ROOT.RDataFrame("Events",self.__FileIn_vecstr)
         else:
+            print('Debug Mode')
             df = ROOT.RDataFrame("Events",self.__FileIn_vecstr).Range(0,self.__nEvents)
 
         #df = ROOT.RDataFrame("Events",self.__FileIn_vecstr).Range(0,10000)
         #ROOT.gInterpreter.ProcessLine(f'#include "./include/{self.__Year}/Header{self.__channel}.h"')
         #ROOT.gInterpreter.AddIncludePath('include')
         ROOT.gInterpreter.ProcessLine('#include "./include/IDScaleFactor.h"')
-        ROOT.gSystem.Load(f'./myLib/myLib.so')
+        print('./include/IDScaleFactor.h is Loaded.')
+        ROOT.gSystem.Load('./myLib/myLib.so')
+        print('./myLib/myLib.so is Loaded.')
+        print(f"Start to Analyze Trigger Efficiency For {self.__channel} ...")
         #print(f'Header File: "./include/{self.__Year}/Header{self.__channel}.h" is loaded')
         df_flag_trig = df.Filter(Trig_Cond(flag = self.__flag,joint = " || " ),"Flag Cut")
         
@@ -454,6 +456,8 @@ class TrigRDataFrame(MyDataFrame):
         self.Init_Histogram(name='l2pteta_lowmet',df=df_HLT_LEPMET_lowmet,dim='2D',xtitle='Subleading lepton P_{T} [GeV]',ytitle='Subleading lepton #eta',tag = 'pteta',content=['l2pt','l2_abseta'])
         self.Init_Histogram(name='l2pteta_highmet',df=df_HLT_LEPMET_highmet,dim='2D',xtitle='Subleading lepton P_{T} [GeV]',ytitle='Subleading lepton #eta',tag = 'pteta',content=['l2pt','l2_abseta'])
 
+        print(self.__FileOutName +' is created.')
+        self.__FileOut = TFile.Open(self.__FileOutName,"RECREATE")
 
         self.__FileOut.cd()
         for name in ['l1pt','l1pt_highjet','l1pt_lowjet','l1pt_lowmet','l1pt_highmet','l1pt_lowpv','l1pt_highpv'\
