@@ -53,5 +53,5 @@ python3 WorkFlow/main.py --mode TrigSF_Calc --year2017 --channel DoubleElectron
 After the program is done, you can see trigSF plots and files in your /eos/user/y/yourname/ExtraYukawa/TriggerSF/DoubleElectron/files/ and /eos/user/y/yourname/ExtraYukawa/TriggerSF/DoubleElectron/plots/ .
 
 ### To-Do List:
-[] Rewrite the script in MakeFile.
-[] Multi-Thread Implementation in Trigger Efficiency Calculation.
+-[ ] Rewrite the script in MakeFile.
+-[ ] Multi-Thread Implementation in Trigger Efficiency Calculation.
