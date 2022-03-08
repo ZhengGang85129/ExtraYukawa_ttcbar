@@ -1,6 +1,6 @@
 ### ttc_bar
 Analysis for ttcbar.
-The structure of the code is simply derived from [TTC_plots](https://github.com/menglu21/TTC_plots.git)
+The structure of the code is simply derived from ![TTC_plots](https://github.com/menglu21/TTC_plots.git)
 
 ## Steps to produce Trigger Scale Factors for three channels.
 
