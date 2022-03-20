@@ -5,9 +5,9 @@ The structure of the code is simply derived from ![TTC_plots](https://github.com
 ## Steps to produce Trigger Scale Factors for three channels.
 
 ### step1: 
+This should implement in CMSSW_XX_XX/src/
 ```
-mkdir TriggerScaleFactor
-cd TriggerScaleFactor
+cmsenv
 git clone https://github.com/ZhengGang85129/TriggerScaleFactor.git
 ```
 
