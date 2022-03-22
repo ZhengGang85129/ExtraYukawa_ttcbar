@@ -22,7 +22,7 @@ sh ./script/script.sh
 
 - Build Output Directory
 ```
-python3 WorkFlow/main.py --mode BuildDir --year2017 --task TriggerSF --DirOut /eos/user/y/yourname/
+python3 WorkFlow/main.py --mode BuildDir --year 2017 --task TriggerSF --DirOut /eos/user/y/yourname/
 ```
 ### step4: Trigger Efficiency Calculation
 
