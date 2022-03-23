@@ -29,7 +29,7 @@ python3 WorkFlow/main.py --mode BuildDir --year 2017 --task TriggerSF --DirOut /
 At the moment, the analysis code haven't include multi-thread calculation, thus you need to calculate channel by channel, type by type(MC/Data).
 ex: for DoubleElectron and MC samples(TTTo2L).
 ```
-python3 WorkFlow/main.py --mode TrigEff_Calc --year2017 --channel DoubleElectron --Type MC
+python3 WorkFlow/main.py --mode TrigEff_Calc --year 2017 --channel DoubleElectron --Type MC
 ```
 After the program is done, you can see your /eos/user/y/yourname/ExtraYukawa/TriggerSF/files/DoubleElectron directory, see what's the change.
 By the way, the cost time of this phase is roughly half of a day. If you are eager to see what's the output, you could simply add the arguments [-n/--nevents]
@@ -41,13 +41,13 @@ At the moment, you have to collect the trigger efficiency results of both types 
 For DoubleElectron:
 
 ```
-python3 WorkFlow/main.py --mode TrigEff_Plot --year2017 --channel DoubleElectron
+python3 WorkFlow/main.py --mode TrigEff_Plot --year 2017 --channel DoubleElectron
 ```
 
 ### step6: Trigger ScaleFactor 
 
 ```
-python3 WorkFlow/main.py --mode TrigSF_Calc --year2017 --channel DoubleElectron
+python3 WorkFlow/main.py --mode TrigSF_Calc --year 2017 --channel DoubleElectron
 ```
 
 After the program is done, you can see trigSF plots and files in your /eos/user/y/yourname/ExtraYukawa/TriggerSF/DoubleElectron/files/ and /eos/user/y/yourname/ExtraYukawa/TriggerSF/DoubleElectron/plots/ .
